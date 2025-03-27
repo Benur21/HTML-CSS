@@ -1,0 +1,3 @@
+1. Usar lenght em vez de length;
+2. Usar = dentro de um if em vez de == ou ===;
+3. Variáveis de for loops (i) passando para funções interiores a eles.

@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<?php include("php/track_code.php") ?>
+<html>
+<head>
+  <title>000 Error | Erro 000</title>
+  <meta charset="UTF-8">
+  <link rel="icon" href="resources\HTML5.png"/>
+  <script type="text/javascript" src="js/JSTools.js"></script>
+  <script name="analytics">(function (i, s, o, g, r, a, m) {i['GoogleAnalyticsObject'] = r;i[r] = i[r] || function () {(i[r].q = i[r].q || []).push(arguments)},i[r].l = 1 * new Date();a = s.createElement(o),m = s.getElementsByTagName(o)[0];a.async = 1;a.src = g;m.parentNode.insertBefore(a, m)})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');ga('create', 'UA-102590562-1', 'auto');ga('send', 'pageview');</script>
+  <style>
+    * {
+	    text-align: center;
+	  }
+	  body {
+	    background-color: #d7d7d7;
+	  }
+  </style>
+</head>
+<body>
+  <h1>000 Error | Erro 000</h1>
+  <h3>Some Error | Algum Erro</h3>
+  <p>Click on this button to back | Clique neste botão para voltar:</p>
+	<button id="backToIndex" onclick="backToIndex();">Back | Voltar</button>
+  <p id="count">10</p>
+  <script>
+    var count = 10;
+    setTimeout(next, 1000);
+    function next() {
+      count--;
+      element("count").innerHTML = count;
+      if (count == 0) {
+        backToIndex();
+      }
+      setTimeout(next,1000);
+    }
+  </script>
+<!--</body>--></body>
+</html>

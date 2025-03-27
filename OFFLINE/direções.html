@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>Direções</title>
+	<meta charset="UTF-8">
+	<link rel="icon" href="https://www.w3.org/html/logo/downloads/HTML5_Badge_512.png"/>
+	<script type="text/javascript" src="js\JSTools.js"></script>
+	<style>
+	  body {
+		margin: 0px;
+		background-color: white;
+		border: 1px solid black;
+	  }
+	  #canvas {
+		margin: 0px;
+	    position: fixed;
+		top: 0px;
+		left: 0px;
+		padding: 0px;
+		background-color: #cdcdcd;
+	  }
+	</style>
+  </head>
+  <body>
+    <canvas id="canvas" width="1000" height="500"></canvas>
+	<script>
+	  var canvas = element("canvas");
+	  var c = canvas.getContext("2d");
+	  toolBarHeight = 0;
+	  canvas.width = window.innerWidth;
+	  canvas.height = window.innerHeight;
+	  var mouseX;
+	  var mouseY;
+	  
+	  
+	  var tower = new Circle();
+	  tower.draw();
+	  
+	  window.requestAnimationFrame(loop);
+	  function loop () {
+	    c.clearRect(0,0,10000,10000);
+	    tower.draw();
+		document.title = mouseX + ";" + mouseY;
+	    window.requestAnimationFrame(loop);
+	  }
+	  
+	  document.body.onmousemove=function (event) {
+	    mouseX = event.clientX;
+		mouseY = event.clientY;
+	  }
+	  function Circle () {
+	    this.x = canvas.width/2;
+		this.y = canvas.height/2;
+		this.radius = 20;
+		this.color = "blue";
+		this.strokeWidth = 2;
+		this.draw = function () {
+		  c.beginPath();
+		  c.fillStyle = this.color;
+		  c.lineWidth = this.strokeWidth;
+	      c.arc(this.x,this.y,this.radius,0,Math.PI*2);
+		  c.fill();
+		  c.stroke();
+		};
+	  }
+	  function Text (x,y) {
+	    this.x = x;
+		this.y = y;
+		this.text = "";
+		this.color = "black";
+		this.font = "bold 25px Tahoma";
+		this.draw = function(text){
+		  c.fillStyle = this.color;
+		  c.font = this.font;
+		  c.fillText(this.text,this.x,this.y);
+		};
+	  }
+	</script>
+  </body>
+</html>

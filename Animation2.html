@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<?php include("php/track_code.php")?>
+<html>
+<head>
+  <title>Animação 2</title>
+	<meta charset="UTF-8">
+	<link rel="icon" href="resources/HTML5.png"/>
+	<script type="text/javascript" src="js/JSTools.js"></script>
+	<script charset="UTF-8" src="resources/languages/Animation 2.js"></script>
+  <script name="analytics">(function (i, s, o, g, r, a, m) {i['GoogleAnalyticsObject'] = r;i[r] = i[r] || function () {(i[r].q = i[r].q || []).push(arguments)},i[r].l = 1 * new Date();a = s.createElement(o),m = s.getElementsByTagName(o)[0];a.async = 1;a.src = g;m.parentNode.insertBefore(a, m)})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');ga('create', 'UA-102590562-1', 'auto');ga('send', 'pageview');</script>
+	<script>
+	  function resizeCanvas() {
+	    if (canvas) {
+	      memCanvas.width = canvas.width;
+	      memCanvas.height = canvas.height;
+	      memD.drawImage(canvas, 0, 0);
+
+	      canvas.width = window.innerWidth;
+	      canvas.height = window.innerHeight;
+
+	      c.drawImage(memCanvas, 0, 0);
+	    }
+	  }
+	</script>
+	<style>
+	  body {
+	    margin: 0px;
+		  width: 100%;
+		  height: 100%;
+		  background-color: black;
+	  }
+	  #myCanvas {
+	    margin: 0px;
+		  position: fixed; 
+		  top: 0; 
+		  left: 0; 
+		  padding: 0;
+	  }
+	  #toolBar {
+	    background-color: black;
+		  position: fixed;
+		  top: 0;
+		  left: 0;
+		  padding: 0px;
+		  width: 100%;
+		  height: 27px;
+	  }
+	  div * {
+	    margin: 3px 0px 0px 20px;
+	  }
+	  .labeledInput {
+	    margin-left: 5px;
+	  }
+	</style>
+</head>
+<body onresize="resizeCanvas();">
+  <canvas id="myCanvas" width="1366" height="638">O teu browser não suporta a tag canvas do HTML5.</canvas>
+	<div id="toolBar">
+	  <button id="backToIndex" onclick="backToIndex();">Voltar</button>
+	  <button id="reloadButton" onclick="location.reload(true)">Recarregar</button>
+	  <select id="dropdownLanguage" onchange="setLanguage(this.value)">
+	    <option value="pt">Português</option>
+	    <option value="en">English</option>
+	  </select><script>/*ONLOAD=*/var dropdownLanguage = element("dropdownLanguage");if(getCookie("language")!=undefined&&getCookie("language")!=""){dropdownLanguage.value=getCookie("language")}else{dropdownLanguage.value="pt"}</script>
+	</div>
+	<script>
+	  
+	  var width = window.innerWidth;
+	  var height = window.innerHeight;
+	  var canvas = element("myCanvas");
+	  var c = canvas.getContext("2d");
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+    
+	  var memCanvas = document.createElement("canvas");
+	  var memD = memCanvas.getContext("2d");
+
+	  window.requestAnimationFrame(loop);
+	  function loop() {
+	    width = window.innerWidth;
+	    height = window.innerHeight;
+	    drawRandomPixel(random(0, width, 1), random(0, height, 1));
+	    window.requestAnimationFrame(loop);
+	  }
+
+	  function drawRandomPixel(x, y) {
+	    c.beginPath();
+	    c.strokeStyle = getRandomColor();
+	    c.moveTo(x, y);
+	    c.lineTo(x + 1, y + 1);
+	    c.stroke();
+	  }
+	</script>
+	<script name="Define Language">setLanguage(getCookie("language"));</script>
+<!--</body>--></body>
+</html>

@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>Gráficos Rendimento</title>
+  <meta charset="UTF-8">
+  <style>
+    * {
+      margin: 0px;
+      background-color: black;
+    }
+    ::-webkit-scrollbar { 
+      display: none; 
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script>
+    function drawPixel (x, y) {
+      ctx.fillRect(Math.round(x*4) + 352, -Math.round(y) + 600, 4, 1);
+    }
+    function floorTo (n, level) {
+      return Math.floor(n*(1/level))/(1/level);
+    }
+    
+    
+    canvas = document.getElementById("canvas");
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+    ctx = canvas.getContext("2d");
+    ctx.strokeStyle = "gray";
+    ctx.strokeRect(352,0,2000,600);
+    
+    
+    
+    const n = { //nextFrame
+      then(foo) {
+        requestAnimationFrame(foo);
+      }
+    };
+    
+    
+    function p(percent) {return percent/100} 
+    
+    
+    async function mainCode() {
+    	await n;
+      
+      for (let j=0;j<=0;j++) { //-12 a +12 para testar entre PIB = -1.2% e +1.2%
+        
+        var capitalInicial = 4200;
+        var capitalAtualizado = 3000;
+        var PIB = p(0.1*j);
+        var TAB = p(0.68);
+        
+        ctx.fillStyle = "green";
+        // Certificados Tesouro Poupança Crescimento
+        console.log("Certificados Tesouro Poupança Crescimento");
+        var lucro = 0;
+        var juro = p(0.75);
+        
+        lucro += capitalInicial*(juro-juro*0.28);       //1º ano
+        console.log("Final 1º ano: "+lucro);
+        drawPixel(1*4,lucro);
+		
+        lucro += capitalAtualizado*((juro-juro*0.28)+(PIB-PIB*0.28)); //2º ano
+        console.log("Final 2º ano: "+lucro);
+        drawPixel(2*4,lucro);
+        for (let i=1; i<=5; i++) {          //3º ano ao 7º ano
+          juro += p(0.30);
+          lucro += capitalAtualizado*((juro-juro*0.28)+(PIB-PIB*0.28));
+          console.log("Final "+(i+2)+"º ano: "+lucro);
+          drawPixel((i+2)*4,lucro);
+        }
+        
+        
+        ctx.fillStyle = "red";
+        // Certificados de Aforro / Série E
+        console.log("Certificados de Aforro / Série E");
+        var lucro = 0;
+        var juro = TAB;
+        
+        console.log(floorTo(juro-juro*0.28,0.0001)*100+"%");
+        for (let i=1; i<=4; i++) { // 1º ano, 4 trimestres
+          lucro += (capitalInicial+lucro)*((juro-juro*0.28)/4);
+          console.log("1º ano, Final "+i+"º trimestre: "+lucro);
+          drawPixel(i,lucro);
+        }
+        juro += p(0.50);
+        juro = floorTo(juro,0.0001);
+        console.log(floorTo(juro-juro*0.28,0.0001)*100+"%");
+        for (let i=1; i<=(4*4); i++) { // 2º ao 5º ano, 16 trimestres
+          lucro += (capitalAtualizado+lucro)*((juro-juro*0.28)/4);
+          console.log((Math.floor((i-1)/4)+2)+"º ano, Final "+(((i-1) % 4)+1)+"º trimestre: "+lucro);
+          drawPixel(4+i,lucro);
+        }
+        juro += p(1.00);
+        juro = floorTo(juro,0.0001);
+        console.log(floorTo(juro-juro*0.28,0.0001)*100+"%");
+        for (let i=1; i<=(4*5); i++) { // 6º ao 10º ano, 20 trimestres
+          lucro += (capitalAtualizado+lucro)*((juro-juro*0.28)/4);
+          console.log((Math.floor((i-1)/4)+6)+"º ano, Final "+(((i-1) % 4)+1)+"º trimestre: "+lucro);
+          drawPixel(20+i,lucro);
+        }
+        
+        for (let i=1; i<=60; i++) {
+          await n;
+        }
+      }
+      
+      
+      
+      
+      
+    	await n;
+      
+    }
+    
+    mainCode();
+    
+    
+    
+    //await nextFrame
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  </script>
+</body>
+</html>

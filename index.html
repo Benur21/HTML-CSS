@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<?php include("php/track_code.php");?>
+<html>
+<head>
+  <title>HTML&JS</title>
+	<meta charset="UTF-8">
+  <meta name="description" content="Aqui estará um conjunto de páginas feitas em HTML e utilizando JavaScript puro.">
+  <meta name="keywords" content="HTML pages, Páginas HTML, JS pages, Páginas JS, Jogo da Bolinha, The Ball Game, JavaScript Animations, JavaScript Games, Animações JavaScript, Jogos JavaScript, html js comxa com">
+	<link rel="icon" href="resources/HTML5.png"/>
+	<script charset="UTF-8" src="js/JSTools.js"></script>
+	<script charset="UTF-8" src="resources/languages/index.js"></script>
+<!--   <script name="analytics">(function (i, s, o, g, r, a, m) {i['GoogleAnalyticsObject'] = r;i[r] = i[r] || function () {(i[r].q = i[r].q || []).push(arguments)},i[r].l = 1 * new Date();a = s.createElement(o),m = s.getElementsByTagName(o)[0];a.async = 1;a.src = g;m.parentNode.insertBefore(a, m)})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');ga('create', 'UA-102590562-1', 'auto');ga('send', 'pageview');</script>
+ -->	<style> /*NPP_COLLAPSE_IT*/
+	  * {
+	    text-align: center;
+	  }
+	  body {
+	    background-color: #d7d7d7;
+	  }
+	  h1 {
+	    color: red;
+	  }
+	  .links {
+	    font-weight: bold;
+	    font-size: 20px;
+	  }
+	  a:visited {
+	    color: blue;
+	  }
+	</style><!--</body>-->
+</head>
+<body>
+  <h1 id="subtitle">Bem vindo a esta página!</h1>
+  <p id="description">Aqui haverá um espaço para páginas web... Esteja atento!</p>
+	<button id="reloadButton" onclick="location.reload(true);">Recarregar</button>
+	<select id="dropdownLanguage" onchange="setLanguage(this.value)" style="margin-left: 160px">
+	  <option value="pt">Português</option>
+	  <option value="en">English</option>
+	</select><script>/*ONLOAD=*/var dropdownLanguage = element("dropdownLanguage");if(getCookie("language")!=undefined&&getCookie("language")!=""){dropdownLanguage.value=getCookie("language")}else{dropdownLanguage.value="pt"}</script>
+  <p class="links"><a id="Animation 1_html" href="Animation1.html">Animação 1</a></p>
+	<p class="links"><a id="Animation 2_html" href="Animation2.html">Animação 2</a></p>
+	<p class="links"><a id="Ball Game_html" href="TheBallGame.html">Jogo da Bolinha</a></p>
+	<p class="links"><a id="Monopoly_html" href="Monopoly.html">Monopólio</a></p>
+	<script name="Define Language">setLanguage(getCookie("language"));</script>
+</body>
+</html>

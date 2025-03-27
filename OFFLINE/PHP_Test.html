@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <link rel="icon" href="resources\HTML5.png"/>
+  <script type="text/javascript" src="js/JSTools.js"></script>
+  <style>
+    
+  </style>
+</head>
+<body>
+  <?php 
+    echo $_SERVER['HTTP_REFERER']."<br>";
+    echo $_SERVER['REMOTE_ADDR']."<br>";
+    echo $_SERVER['HTTP_USER_AGENT'];
+    
+    function getStringFromTo($strng,$from,$to) {
+      return substr($strng,$from,$to-$from+1);
+    }
+    
+    echo "<br>".getStringFromTo("HelloWorl
+d,HowAreYou?", 5, 16)
+  ?>
+</body>
+</html>

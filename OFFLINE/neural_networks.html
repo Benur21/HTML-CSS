@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<?php include("php/track_code.php") ?>
+<html>
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <script src="https://unpkg.com/brain.js@1.1.2/browser.min.js"></script>
+  <style>
+    body {
+        font-family: helvetica neue;
+    }
+    #example {
+        padding: 100px;
+        background: #ff0000;
+        color: white;
+        font-size: 36px;
+    }
+  </style>
+</head>
+<body>
+  <input type="color" value="#ff0000"/>
+  <div id="example">Example Text</div>
+  <script>
+    const input = document.querySelector("input");
+    const example = document.querySelector("#example");
+
+    input.addEventListener("change", (e) => {
+        const rgb = getRgb(e.target.value);
+        var net = new brain.NeuralNetwork();
+        console.log(rgb);
+        net.train([{
+                    input: {
+                        r: 0.03,
+                        g: 0.7,
+                        b: 0.5
+                    },
+                    output: {
+                        black: 1
+                    }
+                }, {
+                    input: {
+                        r: 1.0,
+                        g: 1.0,
+                        b: 1.0
+                    },
+                    output: {
+                        black: 1
+                    }
+                },{
+                    input: {
+                        r: 0.0,
+                        g: 0.0,
+                        b: 0.0
+                    },
+                    output: {
+                        white: 1
+                    }
+                },{
+                    input: {
+                        r: 0.16,
+                        g: 0.09,
+                        b: 0.2
+                    },
+                    output: {
+                        white: 1
+                    }
+                }, {
+                    input: {
+                        r: 0.5,
+                        g: 0.5,
+                        b: 1.0
+                    },
+                    output: {
+                        white: 1
+                    }
+                }
+            ]);
+        console.log("ok");
+        const result = brain.likely(rgb, net);
+        console.log(result);
+        example.style.background = e.target.value;
+        example.style.color = result;
+    })
+
+    function getRgb(hex) {
+        var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+            return r + r + g + g + b + b;
+        });
+
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: Math.round(parseInt(result[1], 16) / 2.55) / 100,
+            g: Math.round(parseInt(result[2], 16) / 2.55) / 100,
+            b: Math.round(parseInt(result[3], 16) / 2.55) / 100,
+        }
+         : null;
+    }
+  </script>
+</body>
+</html>

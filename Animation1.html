@@ -1,0 +1,288 @@
+﻿<!DOCTYPE html>
+<?php include("php/track_code.php");?>
+<html>
+<head>
+  <title>Animação 1</title>
+  <meta charset="UTF-8">
+	<link rel="icon" href="resources/HTML5.png"/>
+	<script type="text/javascript" src="js/JSTools.js"></script>
+	<script charset="UTF-8" src="resources/languages/Animation 1.js"></script>
+  <script name="analytics">(function (i, s, o, g, r, a, m) {i['GoogleAnalyticsObject'] = r;i[r] = i[r] || function () {(i[r].q = i[r].q || []).push(arguments)},i[r].l = 1 * new Date();a = s.createElement(o),m = s.getElementsByTagName(o)[0];a.async = 1;a.src = g;m.parentNode.insertBefore(a, m)})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');ga('create', 'UA-102590562-1', 'auto');ga('send', 'pageview');</script>
+	<style>
+	  body {
+	    margin: 0px;
+		  width: 100%;
+		  height: 100%;
+		  background-color: red;
+	  }
+	  #canvas {
+	    margin: 0px;
+		  position: fixed; 
+		  top: 0px; 
+		  left: 0px; 
+		  padding: 0px;
+		  border: 0px solid black;
+	  }
+	  #toolBar {
+	    background-color: black;
+		  position: fixed;
+		  top: 0;
+		  left: 0;
+		  padding: 0px;
+		  width: 100%;
+		  height: 27px;
+	  }
+	  div * {
+	    margin: 3px 0px 0px 20px;
+	  }
+	  .labeledInput {
+	    margin-left: 5px;
+	  }
+	  span {
+	    color: white;
+		  font-family: Arial Black;
+		  font-size: 13px;
+	  }
+	  #speedBox {
+	    width: 50px;
+	  }
+	</style>
+</head>
+<body onresize="resizeCanvas();" onload="resizeCanvas();">
+  <canvas id="canvas" width="1366" height="638">O teu browser não suporta a tag canvas do HTML5.</canvas>
+	<div id="toolBar">
+	  <button id="backToIndex" onclick="backToIndex();">Voltar</button>
+	  <button id="reloadButton" onclick="location.reload(true)">Recarregar</button>
+	  <span id="speed">Velocidade: </span>
+	  <input type="number" id="speedBox" class="labeledInput" min="0" max="1000" title="Velocidade da(s) bola(s)."/>
+	  <button id="randomPosition">Aleatorizar Posição</button>
+	  <button id="randomSpeed">Aleatorizar Velocidade</button>
+	  <span id="balls">Bolas: </span>
+	  <input type="number" id="ballsBox" class="labeledInput" min="1" max="100" title="Número de bolas na animação." />
+	  <select id="dropdownLanguage" onchange="setLanguage(this.value)">
+	    <option value="pt">Português</option>
+	    <option value="en">English</option>
+	  </select><script>/*ONLOAD=*/var dropdownLanguage = element("dropdownLanguage");if(getCookie("language")!=undefined&&getCookie("language")!=""){dropdownLanguage.value=getCookie("language")}else{dropdownLanguage.value="pt"}</script>
+	</div>
+	<script name="Define Language">setLanguage(getCookie("language"))</script>
+	<script name="Initialization">
+	  var canvas = element("canvas");
+	  var c = canvas.getContext("2d");
+	  var speedBox = element("speedBox");
+	  var randomPosition = element("randomPosition");
+	  var randomSpeed = element("randomSpeed");
+	  var ballsBox = element("ballsBox");
+	  ballsBox.value = 1;
+	  toolBarHeight = 27;
+	  element("toolBar").style.height = toolBarHeight + "px";
+	  canvas.style.top = toolBarHeight + "px";
+  </script>
+  <script name="Events">
+	  speedBox.oninput = function(){
+	    setSpeed(+speedBox.value);
+	  };
+	  randomPosition.onclick = function () {
+	    for (i = 0; i < ball.length; i++) {
+	      ball[i].goToRandomPos();
+        var ballisTouchingAnotherBall = false;
+	      for (j = 0; j < ball.length; j++) {
+	        if (i !== j) {
+            try {
+	            var dist = distance(ball[j].x, ball[j].y, ball[i].x, ball[i].y);
+	            if (dist < ball[j].radius + ball[i].radius + 10) {
+	              ballisTouchingAnotherBall=true;
+	            }
+            } catch(err) {
+              console.log("ball[i]:"+ball[i]);
+              console.log("i:"+i);
+              console.log("ball.length:"+ball.length);
+              throw err + "MYERROR";
+            }
+	        }
+	      }
+        if (ballisTouchingAnotherBall) {
+          i--;
+        }
+	    }
+	  };
+	  randomSpeed.onclick = function () {
+	    var rand = Math.random() * speedBox.max;
+	    setSpeed(rand);
+	  };
+	  ballsBox.oninput = function () {
+	    if (parseInt(ballsBox.value) > parseInt(ballsBox.max)) {
+	      ballsBox.value = ballsBox.max;
+	    }
+	    if (parseInt(ballsBox.value) < parseInt(ballsBox.min) || ballsBox.value === "") {
+	      ballsBox.value = ballsBox.min;
+	    }
+	    ballsBox.value = Math.floor(ballsBox.value);
+
+	    var maxSpeed = 1000 / ballsBox.value;
+	    oldBalls = ball.length;
+	    if (ballsBox.value < ball.length) {
+	      for (m = 0; m < oldBalls - ballsBox.value; m++) {
+	        ball.pop();
+	      }
+	    } else {
+	      numberOfBalls = ballsBox.value;
+	      for (i = oldBalls; i < numberOfBalls; i++) {
+	        ball[i] = new Ball(0, 0, i);
+	      }
+	      for (i = oldBalls; i < ball.length; i++) {
+	        ball[i].goToRandomPos();
+          var balliTouchingAnotherBall = false;
+	        for (j = 0; j < ball.length; j++) {
+	          if (i !== j) {
+	            var dist = distance(ball[j].x, ball[j].y, ball[i].x, ball[i].y);
+	            if (dist < ball[j].radius + ball[i].radius + 10) {
+	              balliTouchingAnotherBall=true;
+	            }
+	          }
+	        }
+          if (balliTouchingAnotherBall) {
+            i--;
+          }
+	      }
+	    }
+	    setSpeed(ball[0].speed);
+
+	    speedBox.max = maxSpeed;
+	    if (speedBox.value > maxSpeed) {
+	      setSpeed(maxSpeed);
+	    }
+	  };
+	</script>
+  <script name="Classes">
+    function Ball(x, y, index) {
+      Circle.call(this, x, y, 10); //Inherit from Circle
+      this.index = index;
+      this.color = "blue";
+      this.speed = 2;
+      this.speedX = random(-this.speed, this.speed, 0.1);
+      this.speedY = Math.sqrt(Math.pow(this.speed, 2) - Math.pow(this.speedX, 2));
+      this.directionX = Math.sign(this.speedX);
+      this.directionY = Math.sign(this.speedY);
+      this.slope = this.speedY / this.speedX;
+      if (random(0, 1, 1) === 1) {
+        this.speedY *= -1;
+      }
+    }
+    Ball.prototype = Object.create(Circle.prototype);
+    Ball.prototype.constructor = Ball;
+    
+    Ball.prototype.setSpeed = function (newSpeed) {
+      this.speed = newSpeed;
+
+      if (this.speedY !== 0 && this.speedX !== 0) {
+        this.slope = this.speedY / this.speedX;
+      }
+
+      this.speedX = Math.cos(Math.atan(this.slope)) * newSpeed;
+      this.speedY = Math.sqrt(Math.pow(this.speed, 2) - Math.pow(this.speedX, 2));
+
+      this.speedX = Math.abs(this.speedX) * this.directionX;
+      this.speedY = Math.abs(this.speedY) * this.directionY;
+    };
+    Ball.prototype.goToRandomPos = function () {
+      this.goTo(Math.random() * (rect.width - this.radius * 2), Math.random() * (rect.height - this.radius * 2));
+    };
+    Ball.prototype.checkPos = function () {
+		    if (this.x > rect.width - this.radius) {
+		      this.directionX = -1;
+		      this.speedX = Math.abs(this.speedX) * this.directionX;
+		    }
+		    if (this.x < this.radius) {
+		      this.directionX = 1;
+		      this.speedX = Math.abs(this.speedX) * this.directionX;
+		    }
+		    if (this.y > rect.height - this.radius) {
+		      this.directionY = -1;
+		      this.speedY = Math.abs(this.speedY) * this.directionY;
+		    }
+		    if (this.y < this.radius) {
+		      this.directionY = 1;
+		      this.speedY = Math.abs(this.speedY) * this.directionY;
+		    }
+		    if (ball.length > 1) {
+		      for (j = 0; j < ball.length; j++) {
+		        if (this.index !== j) {
+		          var dist = distance(ball[j].x, ball[j].y, this.x, this.y);
+		          if (dist < ball[j].radius + this.radius) {
+
+		            var a = (ball[j].y - this.y) / (ball[j].x - this.x);
+		            var b = this.speedY - a * this.speedX;
+		            var c =  - (1 / a);
+		            var d = 0;
+
+		            this.speedX = ((d - b) / (a - c)) + (((d - b) / (a - c)) - this.speedX);
+		            this.speedY = (a * ((d - b) / (a - c)) + b) + ((a * ((d - b) / (a - c)) + b) - this.speedY);
+
+		            if (this.speedY !== 0 && this.speedX !== 0) {
+		              this.slope = this.speedY / this.speedX;
+		            }
+		            this.directionX = Math.sign(this.speedX);
+		            this.directionY = Math.sign(this.speedY);
+		          }
+		        }
+		      }
+		    }
+		  };
+    Ball.prototype.updatePos = function () {
+      for (h = 0; h < this.speed * 10; h++) {
+        this.x += this.speedX / (this.speed * 10);
+        this.y += this.speedY / (this.speed * 10);
+        this.checkPos();
+      }
+    };
+  </script>
+  <script name="Real Code">
+	  //RECT THINGS
+    var rect = new Rectangle(50,50,840,483);
+    rect.outlineWidth = 2;
+    rect.outlinePosition = "center";
+    rect.doTranslate = true;
+    
+	  canvas.width = rect.x * 2 + rect.width;
+	  canvas.height = rect.y * 2 + rect.height;
+	  //BALL THINGS
+	  var ball = [];
+	  var numberOfBalls = ballsBox.value;
+	  var oldBalls;
+	  for (i = 0; i < numberOfBalls; i++) {
+	    ball[i] = new Ball(0, 0, i);
+	  }
+	  for (i = 0; i < ball.length; i++) {
+	    ball[i].goToRandomPos();
+	  }
+	  setSpeed(ball[0].speed);
+/*------------------------------------LOOP-----------------------------------------*/
+    resizeCanvas();
+	  AnimationLOOP(function(){
+	    rect.draw();
+	    for (i = 0; i < ball.length; i++) {
+	      ball[i].draw();
+	      ball[i].updatePos();
+	    }
+	  });
+/*------------------------------------FUNCTIONS------------------------------------*/
+	  function setSpeed(newSpeed) {
+	    // MAKE SURE THAT SPEED IS BETWEEN ITS MAX AND MIN
+	    if (newSpeed > speedBox.max) {
+	      newSpeed = speedBox.max;
+	    }
+	    if (newSpeed < speedBox.min) {
+	      newSpeed = speedBox.min;
+	    }
+	    newSpeed = Math.floor(newSpeed * 10) / 10;
+	    // END SPEED HANDLING
+
+	    speedBox.value = newSpeed;
+	    for (n = 0; n < ball.length; n++) {
+	      ball[n].setSpeed(newSpeed);
+	    }
+	  }
+
+	</script>
+<!--</body>--></body>
+</html>
