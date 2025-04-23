@@ -20,3 +20,4 @@ Gemfile.lock
 
 # manually added
 OFFLINE/
+node_modules/
