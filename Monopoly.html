@@ -5,7 +5,6 @@
   <title>Monopoly</title>
   <meta charset="UTF-8">
   <link rel="icon" href="resources/HTML5.png" />
-	<script charset="UTF-8" src="resources/languages/Monopoly.js"></script>
   <script name="analytics">(function (i, s, o, g, r, a, m) {i['GoogleAnalyticsObject'] = r;i[r] = i[r] || function () {(i[r].q = i[r].q || []).push(arguments)},i[r].l = 1 * new Date();a = s.createElement(o),m = s.getElementsByTagName(o)[0];a.async = 1;a.src = g;m.parentNode.insertBefore(a, m)})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');ga('create', 'UA-102590562-1', 'auto');ga('send', 'pageview');</script>
   <style>
  	  body {
@@ -43,7 +42,8 @@
 	  }
   </style>
 </head>
-<body onresize="resizeCanvas();" onload="resizeCanvas();">
+<!-- <body onresize="resizeCanvas();" onload="resizeCanvas();"> -->
+<body>
   <canvas id="canvas" width="1000" height="1000">O teu browser não suporta a tag canvas do HTML5.</canvas>
   <div id="toolBar">
 	  <button id="backToIndex" onclick="backToIndex()">Voltar</button>
@@ -51,9 +51,8 @@
 	  <select id="dropdownLanguage" onchange="setLanguage(this.value)">
 	    <option value="pt">Português</option>
 	    <option value="en">English</option>
-	  </select><script>/*ONLOAD=*/var dropdownLanguage = element("dropdownLanguage");if(getCookie("language")!=undefined&&getCookie("language")!=""){dropdownLanguage.value=getCookie("language")}else{dropdownLanguage.value="pt"}</script>
+	  </select>
 	</div>
-	<script name="Define Language">setLanguage(getCookie("language"))</script>
   <!-- <script name="Initialization" type="text/javascript" src="src/Monopoly_Initialization.js"></script>
   <script name="Classes" type="text/javascript" src="src/Monopoly_Classes.js"></script>
   <script name="Real Code" type="text/javascript" src="src/Monopoly_Main.js"></script> -->

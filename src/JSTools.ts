@@ -395,9 +395,31 @@ Button.prototype.onhover = function () {
   }
 };
 
-
-
-
+export {
+  backToIndex,
+  element,
+  getRandomColor,
+  windowRatio,
+  canvasRatio,
+  toolBarHeight,
+  canvasScale,
+  resizeCanvas,
+  toRadian,
+  toDegree,
+  random,
+  invertFraction,
+  distance,
+  download,
+  removeElement,
+  getCookie,
+  AnimationLOOP,
+  transparent,
+  Control,
+  Rectangle,
+  Circle,
+  Label,
+  Button,
+};
 
 
 

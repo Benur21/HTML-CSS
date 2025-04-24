@@ -1,3 +1,5 @@
+import { Rectangle } from "./JSTools";
+
 class Place extends Rectangle {
   type: string;
   price: number;

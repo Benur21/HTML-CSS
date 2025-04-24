@@ -1,5 +1,6 @@
 import { canvas, canvasPadding, places } from './Monopoly_Initialization';
 import { Place, JSWindow } from './Monopoly_Classes';
+import { AnimationLOOP, Rectangle } from './JSTools';
 
 var gameBoard = new Rectangle(canvasPadding, canvasPadding, canvas.width-canvasPadding*2, canvas.height-canvasPadding*2);
 gameBoard.doTranslate = true; //Space 980x980
