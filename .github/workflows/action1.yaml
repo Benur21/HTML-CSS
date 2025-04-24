@@ -31,6 +31,7 @@ jobs:
           echo "Current files:"
           ls -l -a
           echo "Building:"
+          yarn install
           yarn build
           echo "Removing old files:"
           rm -f -r
