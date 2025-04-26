@@ -6,14 +6,14 @@ import { defineConfig } from 'vite'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
-  // build: {
-  //   rollupOptions: {
-  //     input: {
-  //       main: resolve(__dirname, 'index.html'),
-  //       nested: resolve(__dirname, 'nested/index.html'),
-  //     },
-  //   },
-  // },
+  build: {
+    rollupOptions: {
+      input: {
+        index: resolve(__dirname, 'index.html'),
+        monopoly: resolve(__dirname, 'Monopoly.html'),
+      },
+    },
+  },
   server: {
     open: true
   }
