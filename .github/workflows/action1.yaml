@@ -22,6 +22,8 @@ jobs:
           pwd
           echo "Current files:"
           ls -l -a
+          echo "Build the app:"
+          yarn && yarn run build
           echo "Current branch:"
           git branch
           echo "Checkout branch:"
@@ -30,12 +32,15 @@ jobs:
           git branch
           echo "Current files:"
           ls -l -a
-          echo "Building:"
-          yarn install
-          yarn build
           echo "Removing old files:"
           shopt -s extglob
           rm -f -r !(dist)
+          ls -l -a
+          echo "Moving new files:"
+          mv dist/* .
+          ls -l -a
+          echo "Removing empty:"
+          rm -r dist
           ls -l -a
           echo "Configurating git:"
           git config user.name Benur21
