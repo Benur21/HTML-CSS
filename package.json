@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "js/JSTools.js",
   "repository": "git@github.com:Benur21/HTML-CSS.git",
+  "homepage": "https://benur21.github.io/HTML-CSS",
   "type": "module",
   "author": "Benur21",
   "license": "MIT",
