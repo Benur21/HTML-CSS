@@ -34,7 +34,8 @@ jobs:
           yarn install
           yarn build
           echo "Removing old files:"
-          rm -f -r
+          shopt -s extglob
+          rm -f -r !(dist)
           ls -l -a
           echo "Configurating git:"
           git config user.name Benur21
