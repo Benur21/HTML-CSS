@@ -15,6 +15,7 @@ export default defineConfig({
     },
   },
   server: {
-    open: true
-  }
-})
+    open: true,
+  },
+  base: '/HTML-CSS/',
+});
