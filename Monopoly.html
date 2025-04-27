@@ -4,7 +4,7 @@
 <head>
   <title>Monopoly</title>
   <meta charset="UTF-8">
-  <link rel="icon" href="/HTML-CSS/assets/HTML5-D40-Mdit.png" />
+  <link rel="icon" href="./assets/HTML5-D40-Mdit.png" />
 	<style>
  	  body {
 	    margin: 0px;
@@ -40,18 +40,17 @@
 		  font-size: 13px;
 	  }
   </style>
-  <script type="module" crossorigin src="/HTML-CSS/assets/monopoly-CHThKr-A.js"></script>
+  <script type="module" crossorigin src="./assets/monopoly-DIsxmJC9.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/JSTools-F6IV9Tl3.js">
 </head>
-<!-- <body onresize="resizeCanvas();" onload="resizeCanvas();"> -->
 <body>
   <canvas id="canvas" width="1000" height="1000">O teu browser não suporta a tag canvas do HTML5.</canvas>
   <div id="toolBar">
-	  <button id="backToIndex" onclick="backToIndex()">Voltar</button>
-	  <button id="reloadButton" onclick="location.reload(true)">Recarregar</button>
-	  <select id="dropdownLanguage" onchange="setLanguage(this.value)">
+	  <button id="backToIndex">Voltar</button>
+	  <button id="reloadButton">Recarregar</button>
+	  <select id="dropdownLanguage">
 	    <option value="pt">Português</option>
 	    <option value="en">English</option>
-			<option value="fr">French (test)</option>
 	  </select>
 	</div>
   <!-- <script name="Initialization" type="text/javascript" src="src/Monopoly_Initialization.js"></script>
