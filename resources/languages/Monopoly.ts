@@ -1,5 +1,5 @@
 ﻿import { element } from "../../src/JSTools";
-import { canvas } from "../../src/Monopoly_Initialization";
+import { canvas } from "../../src/Monopoly/Initialization";
 
 function setLanguage(language: "en" | "pt") {
   switch (language) {

@@ -1,6 +1,6 @@
-import { Place } from "./Monopoly_Classes";
-import { element, resizeCanvas, getCookie } from "./JSTools";
-import { setLanguage } from "../resources/languages/Monopoly";
+import { Place } from "./Classes";
+import { element, resizeCanvas, getCookie, toolBarHeight, backToIndex } from "../JSTools";
+import { setLanguage } from "../../resources/languages/Monopoly";
 
 // <select> ONLOAD=
 var dropdownLanguage = element('dropdownLanguage') as HTMLSelectElement;
@@ -10,13 +10,22 @@ if (getCookie('language') != undefined && getCookie('language') != '') {
   dropdownLanguage.value = 'pt';
 }
 
+document.body.onresize = resizeCanvas;
+document.body.onload = resizeCanvas;
+
+//toolBar
+element("backToIndex")!.onclick = backToIndex;
+element('reloadButton')!.onclick = () =>
+  (location.reload as (forceGet: boolean) => void)(true);
+dropdownLanguage.onchange = () => setLanguage(dropdownLanguage.value as "pt" | "en");
+
 const canvas = element("canvas") as HTMLCanvasElement;
 if (canvas == null) {
   throw new Error("Canvas is null.");
 }
 const ctx = canvas.getContext("2d");
 const canvasPadding = 10;
-resizeCanvas();
+resizeCanvas(toolBarHeight);
 const places: Place[] = [];
 
 setLanguage(getCookie("language") as "pt" | "en")

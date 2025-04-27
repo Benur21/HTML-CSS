@@ -1,4 +1,4 @@
-import { c as ctx } from "./Monopoly_Initialization";
+import { c as ctx } from "./Monopoly/Initialization";
 /*--------------------------------------Function-1------------------------------------------------------------------*/
 function backToIndex(){ /*collapse(1,313)*/
   var currentURL = location.href;

@@ -41,21 +41,19 @@
 	  }
   </style>
 </head>
-<!-- <body onresize="resizeCanvas();" onload="resizeCanvas();"> -->
 <body>
   <canvas id="canvas" width="1000" height="1000">O teu browser não suporta a tag canvas do HTML5.</canvas>
   <div id="toolBar">
-	  <button id="backToIndex" onclick="backToIndex()">Voltar</button>
-	  <button id="reloadButton" onclick="location.reload(true)">Recarregar</button>
-	  <select id="dropdownLanguage" onchange="setLanguage(this.value)">
+	  <button id="backToIndex">Voltar</button>
+	  <button id="reloadButton">Recarregar</button>
+	  <select id="dropdownLanguage">
 	    <option value="pt">Português</option>
 	    <option value="en">English</option>
-			<option value="fr">French (test)</option>
 	  </select>
 	</div>
   <!-- <script name="Initialization" type="text/javascript" src="src/Monopoly_Initialization.js"></script>
   <script name="Classes" type="text/javascript" src="src/Monopoly_Classes.js"></script>
   <script name="Real Code" type="text/javascript" src="src/Monopoly_Main.js"></script> -->
-	<script type="module" src="src/main.ts"></script>
+	<script type="module" src="src/Monopoly/entrypoint.ts"></script>
 </body>
 </html>

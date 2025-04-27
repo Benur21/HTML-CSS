@@ -20,6 +20,7 @@
     element("reloadButton").innerHTML = "Recarregar";
     element("Animation 1_html").innerHTML = "Animação 1";
     element("Animation 2_html").innerHTML = "Animação 2";
+    element("Ball Game_html").innerHTML = "Jogo da Bolinha";
     element("Monopoly_html").innerHTML = "Monopólio";
     break;
   }

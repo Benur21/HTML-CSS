@@ -17,5 +17,5 @@ export default defineConfig({
   server: {
     open: true,
   },
-  base: '/HTML-CSS/',
+  base: './',
 });

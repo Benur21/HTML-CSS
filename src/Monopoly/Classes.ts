@@ -1,4 +1,4 @@
-import { Rectangle } from "./JSTools";
+import { Rectangle } from "../JSTools";
 
 class Place extends Rectangle {
   type: string;
