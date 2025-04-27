@@ -16,45 +16,45 @@ jobs:
           echo "Actual things now."
           echo "Cloning repo:"
           git clone https://Benur21:${{ secrets.GITHUB_TOKEN }}@github.com/Benur21/HTML-CSS.git
-          echo "Entering the repo folder:"
+          echo "-Entering the repo folder:"
           cd HTML-CSS/
-          echo "Current path:"
+          echo "-Current path:"
           pwd
-          echo "Current files:"
+          echo "-Current files:"
           ls -l -a
-          echo "Build the app:"
+          echo "-Build the app:"
           yarn && yarn run build
-          echo "Current branch:"
+          echo "-Current branch:"
           git branch
-          echo "Checkout branch:"
+          echo "-Checkout branch:"
           git checkout gh-pages
-          echo "Current branch:"
+          echo "-Current branch:"
           git branch
-          echo "Current files:"
+          echo "-Current files:"
           ls -l -a
-          echo "Removing old files:"
+          echo "-Removing old files:"
           shopt -s extglob
           rm -f -r !(dist)
           ls -l -a
-          echo "Moving new files:"
+          echo "-Moving new files:"
           mv dist/* .
           ls -l -a
-          echo "Removing empty:"
+          echo "-Removing empty:"
           rm -r dist
           ls -l -a
-          echo "Configurating git:"
+          echo "-Configurating git:"
           git config user.name Benur21
           git config user.email Benur21@users.noreply.github.com
-          echo "Git status:"
+          echo "-Git status:"
           git status
-          echo "Git add .:"
+          echo "-Git add .:"
           git add .
-          echo "Commit:"
+          echo "-Commit:"
           git commit -m "deploy: ${{ github.sha }}" --allow-empty
-          echo "Git status:"
+          echo "-Git status:"
           git status
-          echo "Git log:"
+          echo "-Git log:"
           git log -3
-          echo "Push:"
+          echo "-Push:"
           git push
           echo "🍏 This job's status is ${{ job.status }}."
