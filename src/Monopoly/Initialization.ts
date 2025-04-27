@@ -1,5 +1,5 @@
 import { Place } from "./Classes";
-import { element, resizeCanvas, getCookie, toolBarHeight, backToIndex } from "../JSTools";
+import { element, resizeCanvas, getCookie, backToIndex } from "../JSTools";
 import { setLanguage } from "../../resources/languages/Monopoly";
 
 // <select> ONLOAD=
@@ -25,7 +25,7 @@ if (canvas == null) {
 }
 const ctx = canvas.getContext("2d");
 const canvasPadding = 10;
-resizeCanvas(toolBarHeight);
+resizeCanvas();
 const places: Place[] = [];
 
 setLanguage(getCookie("language") as "pt" | "en")
