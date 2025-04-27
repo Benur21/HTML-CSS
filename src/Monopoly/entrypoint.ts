@@ -1,3 +1,4 @@
-import './Initialization.js';
-import './Classes.js';
-import './Main.js';
+import '../JSTools';
+import './Initialization';
+import './Classes';
+import './Main';
