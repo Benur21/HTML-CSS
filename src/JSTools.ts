@@ -22,7 +22,7 @@ var windowRatio;
 var canvasRatio;
 const toolBarHeight: number = 27;
 var canvasScale;
-function resizeCanvas(){
+function resizeCanvas(toolBarHeight: number){
   //Get Window Ratio
   windowRatio = window.innerWidth / (window.innerHeight - toolBarHeight);
   //Get Canvas Ratio
