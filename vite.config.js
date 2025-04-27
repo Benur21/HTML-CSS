@@ -13,6 +13,7 @@ export default defineConfig({
         monopoly: resolve(__dirname, 'Monopoly.html'),
       },
     },
+    sourcemap: true
   },
   server: {
     open: true,
