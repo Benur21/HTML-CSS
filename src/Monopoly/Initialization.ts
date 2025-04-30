@@ -23,7 +23,10 @@ const canvas = element("canvas") as HTMLCanvasElement;
 if (canvas == null) {
   throw new Error("Canvas is null.");
 }
-const ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+if (ctx == null) {
+  throw new Error("Canvas context is null.");
+}
 const canvasPadding = 10;
 resizeCanvas();
 const places: Place[] = [];

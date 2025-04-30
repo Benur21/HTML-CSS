@@ -1,4 +1,4 @@
-import { c as ctx } from "./Monopoly/Initialization";
+import { c as ctx, canvas } from "./Monopoly/Initialization";
 /*--------------------------------------Function-1------------------------------------------------------------------*/
 function backToIndex(){ /*collapse(1,313)*/
   var currentURL = location.href;
@@ -21,7 +21,7 @@ function getRandomColor() {
 var windowRatio;
 var canvasRatio;
 const toolBarHeight: number = 27;
-var canvasScale;
+let canvasScale : number;
 function resizeCanvas(){
   //Get Window Ratio
   windowRatio = window.innerWidth / (window.innerHeight - toolBarHeight);
@@ -42,16 +42,16 @@ function resizeCanvas(){
   }
 }
 /*--------------------------------------Function-5------------------------------------------------------------------*/
-function toRadian(deg) {
+function toRadian(deg: number) {
   return deg * Math.PI/180;
 }
 /*--------------------------------------Function-6------------------------------------------------------------------*/
-function toDegree(rad) {
+function toDegree(rad: number) {
   return rad * 180 / Math.PI;
 }
 /*--------------------------------------Function-7------------------------------------------------------------------*/
-function random(min, max, exp) {
-  rand = Math.random();
+function random(min: number, max: number, exp: number) {
+  let rand = Math.random();
   rand = rand * (max - min) + min;
   if (exp < 1 && exp > 0) {
     rand = rand * invertFraction(exp, 1);
@@ -66,17 +66,17 @@ function random(min, max, exp) {
   }
 }
 /*--------------------------------------Function-8------------------------------------------------------------------*/
-function invertFraction(numerator,denominator){
+function invertFraction(numerator: number, denominator: number){
   return denominator/numerator;
 }
 /*--------------------------------------Function-8------------------------------------------------------------------*/
-function distance(x1,y1,x2,y2){
+function distance(x1: number,y1: number,x2: number,y2: number){
   var difX = x1-x2;
   var difY = y1-y2;
   return Math.sqrt(Math.abs(difX*difX+difY*difY));
 }
 /*--------------------------------------Function-9------------------------------------------------------------------*/
-function download(url){
+function download(url: string){
   var downloadFrame = document.createElement("iframe");
   downloadFrame.height = "0px";
   downloadFrame.width = "0px";
@@ -85,11 +85,11 @@ function download(url){
   setTimeout(function(){removeElement(downloadFrame)},10000);
 }
 /*--------------------------------------Function-10-----------------------------------------------------------------*/
-function removeElement(elem) {
-  elem.parentNode.removeChild(elem);
+function removeElement(elem: HTMLElement) {
+  elem.parentNode!.removeChild(elem);
 }
 /*--------------------------------------Function-11-----------------------------------------------------------------*/
-function getCookie(cname) {
+function getCookie(cname: string) {
   var name = cname + "=";
   var decodedCookie = decodeURIComponent(document.cookie);
   var ca = decodedCookie.split(';');
@@ -120,22 +120,29 @@ Object.prototype.getAllProperties = function () {
   //getAllProperties (!IMPORTANT!)
   var arr = [];
   for (let property in this) {
-    if (!this[property].toString().includes('getAllInstances') && !this[property].toString().includes('getAllProperties')) {
-      arr.push(this[property]);
+    if (
+      !(this as { [a: string]: any })[property]
+        .toString()
+        .includes('getAllInstances') &&
+      !(this as { [a: string]: any })[property]
+        .toString()
+        .includes('getAllProperties')
+    ) {
+      arr.push((this as { [a: string]: any })[property]);
     }
   }
   return arr;
 }
 /*--------------------------------------Function-14-----------------------------------------------------------------*/
-Array.prototype.getControlByName = function (name) { //Ver se é mesmo necessário, não deve ser, então é pra apagar.
+Array.prototype.getControlByName = function (name: string) { //Ver se é mesmo necessário, não deve ser, então é pra apagar.
   return this.find(function(control){return control.name.toLowerCase() == name.toLowerCase()})
 }
 /*--------------------------------------Function-15-----------------------------------------------------------------*/
 //Function.prototype.callIndex = 0;
 /*--------------------------------------Function-16-----------------------------------------------------------------*/
 var functionSaved = false;
-var functionSave;
-function AnimationLOOP (funct) {
+var functionSave: () => void;
+function AnimationLOOP (funct: () => void) {
   if (!functionSaved) {
     functionSave = funct;
     functionSaved = true;
@@ -143,7 +150,7 @@ function AnimationLOOP (funct) {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0,0,canvas.width,canvas.height);
   functionSave();
-  requestAnimationFrame(AnimationLOOP);
+  requestAnimationFrame(AnimationLOOP as any);
 }
 /*--------------------------CLASSES-----Function-17-----------------------------------------------------------------*/
 var transparent = "rgba(0,0,0,0)";
@@ -250,7 +257,7 @@ Rectangle.prototype.drawParts_patterns = function () {
   } //
 };
 /*--------------------------------------Function-19-----------------------------------------------------------------*/
-function Circle(x, y, radius) {
+function Circle(x: number, y: number, radius: number) {
   Control.call(this, x, y); //Inherit from Control
   this.radius = radius;
 }
@@ -267,12 +274,12 @@ Circle.prototype.draw = function () {
     ctx.stroke();
   }
 }
-Circle.prototype.goTo = function (newX, newY) {
+Circle.prototype.goTo = function (newX: number, newY: number) {
   this.x = newX + this.radius;
   this.y = newY + this.radius;
 };
 /*--------------------------------------Function-20-----------------------------------------------------------------*/
-function Label(x, y, text, xAlign) {
+function Label(x: number, y: number, text: number, xAlign: number) {
   Control.call(this, x, y); //Inherit from Control
   this.text = text;
   this.color = "white";
@@ -312,7 +319,7 @@ Label.prototype.updateLanguage = function () {
   this.text = "<!ERROR!>";
 };
 /*--------------------------------------Function-20-----------------------------------------------------------------*/
-function Button(x, y, width, height, text) {
+function Button(x: number, y: number, width: number, height: number, text: string) {
   Rectangle.call(this, x, y, 50, 81); 
   this.label = new Label(x, y, text, 'center');
   this.label.outlineWidth = 6;
