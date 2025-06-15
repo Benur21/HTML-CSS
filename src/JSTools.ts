@@ -20,25 +20,25 @@ function getRandomColor() {
 /*--------------------------------------Function-4------------------------------------------------------------------*/
 var windowRatio;
 var canvasRatio;
-const toolBarHeight: number = 27;
+(window as any).toolBarHeight = 27;
 let canvasScale : number;
 function resizeCanvas(){
   //Get Window Ratio
-  windowRatio = window.innerWidth / (window.innerHeight - toolBarHeight);
+  windowRatio = window.innerWidth / (window.innerHeight - (window as any).toolBarHeight);
   //Get Canvas Ratio
   canvasRatio = canvas.width / canvas.height;
   if (canvasRatio > windowRatio) {
     canvas.style.width = window.innerWidth + "px";
     canvas.style.height = "";
     canvas.style.left = "0px";
-    canvas.style.top = ((window.innerHeight - toolBarHeight) / 2 - (window.innerWidth / canvasRatio) / 2 + toolBarHeight) + "px";
-    canvasScale = canvas.style.width.replace("px", "") / canvas.width;
+    canvas.style.top = ((window.innerHeight - (window as any).toolBarHeight) / 2 - (window.innerWidth / canvasRatio) / 2 + (window as any).toolBarHeight) + "px";
+    canvasScale = Number(canvas.style.width.replace("px", "")) / canvas.width;
   } else if (canvasRatio <= windowRatio) {
     canvas.style.width = "";
-    canvas.style.height = window.innerHeight - toolBarHeight + "px";
-    canvas.style.left = (window.innerWidth / 2 - ((window.innerHeight - toolBarHeight) * canvasRatio) / 2) + "px";
-    canvas.style.top = toolBarHeight + "px";
-    canvasScale = canvas.style.height.replace("px", "") / canvas.height;
+    canvas.style.height = window.innerHeight - (window as any).toolBarHeight + "px";
+    canvas.style.left = (window.innerWidth / 2 - ((window.innerHeight - (window as any).toolBarHeight) * canvasRatio) / 2) + "px";
+    canvas.style.top = (window as any).toolBarHeight + "px";
+    canvasScale = Number(canvas.style.height.replace("px", "")) / canvas.height;
   }
 }
 /*--------------------------------------Function-5------------------------------------------------------------------*/
@@ -154,108 +154,135 @@ function AnimationLOOP (funct: () => void) {
 }
 /*--------------------------CLASSES-----Function-17-----------------------------------------------------------------*/
 var transparent = "rgba(0,0,0,0)";
-function Control(x, y) {
-  this.x = x;
-  this.y = y;
-  this.initX = x; //[Inserir razão destes dois]
-  this.initY = y;
-  this.color = transparent;
-  this.outlineColor = "black";
-  this.outlineWidth = 2;
-  this.visible = true;
-  this.showIndex = 0; //Lower is drawn first, in back.
-  //this.name = ""; //Ver função getControlByName
-}
-Control.prototype.show = function () {
-  this.visible = true;
-}
-Control.prototype.hide = function () {
-  this.visible = false;
+class Control {
+  x: number;
+  y: number;
+  initX: number;
+  initY: number;
+  color: string;
+  outlineColor: string;
+  outlineWidth: number;
+  visible: boolean;
+  showIndex: number;
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+    this.initX = x; //[Inserir razão destes dois]
+    this.initY = y;
+    this.color = transparent;
+    this.outlineColor = "black";
+    this.outlineWidth = 2;
+    this.visible = true;
+    this.showIndex = 0; //Lower is drawn first, in back.
+    //this.name = ""; //Ver função getControlByName
+    
+    // @ts-ignore
+    window[this.constructor.name + Math.random() * 10**18] = this;
+  }
+  
+  /**
+   * show
+   */
+  public show() {
+    this.visible = true;
+  }
+  public hide() {
+    this.visible = false;
+  };
+  
 }
 /*--------------------------------------Function-18-----------------------------------------------------------------*/
-function Rectangle(x, y, width, height) {
-  Control.call(this, x, y); //Inherit from Control
-  this.width = width;
-  this.height = height;
-  this.outlineWidth = 4;
-  this.outlinePosition = "center";
-  this.doTranslate = false;
-  this.doPattern = "";
+class Rectangle extends Control {
+  width: number;
+  height: number;
+  outlinePosition: string;
+  doTranslate: boolean;
+  doPattern: string;
+  constructor (x: number, y: number, width: number, height: number) {
+    super(x, y);
+    this.width = width;
+    this.height = height;
+    this.outlineWidth = 4;
+    this.outlinePosition = "center";
+    this.doTranslate = false;
+    this.doPattern = "";
+  }
+  
+  public draw() {
+    if (this.visible) {
+      ctx.fillStyle = this.color;
+      ctx.strokeStyle = this.outlineColor;
+      ctx.lineWidth = this.outlineWidth;
+      ctx.fillRect(this.x, this.y, this.width, this.height);
+      this.drawParts_outline();
+      this.drawParts_patterns();
+      if (this.doTranslate) {
+        ctx.translate(this.x, this.y);
+      }
+    }
+  }
+  
+  drawParts_outline() {
+    switch (this.outlinePosition.toLowerCase()) {
+    case "inner":
+      ctx.strokeRect(this.x + this.outlineWidth / 2, this.y + this.outlineWidth / 2, this.width - this.outlineWidth, this.height - this.outlineWidth);
+      break;
+    case "center":
+      ctx.strokeRect(this.x, this.y, this.width, this.height);
+      break;
+    case "outer":
+      ctx.strokeRect(this.x - this.outlineWidth / 2, this.y - this.outlineWidth / 2, this.width + this.outlineWidth, this.height + this.outlineWidth);
+      break;
+    }
+  }
+  
+  drawParts_patterns() {
+    switch (this.doPattern.toLowerCase()) {
+    case "diagonals":
+      ctx.beginPath();
+      var x1 = this.x;
+      var y1 = this.y;
+      var x2 = this.x;
+      var y2 = this.y;
+      var increment = 6;
+      var count = 0;
+      while (!(x1 == this.x + this.width)) {
+        x1++;
+        y2++;
+        count++;
+        if (count == increment) {
+          count = 0;
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+        }
+      }
+      while (!(y2 == this.y + this.height)) {
+        y1++;
+        y2++;
+        count++;
+        if (count == increment) {
+          count = 0;
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+        }
+      }
+      while (!(y1 == this.y + this.height)) {
+        y1++;
+        x2++;
+        count++;
+        if (count == increment) {
+          count = 0;
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+        }
+      }
+      ctx.stroke();
+      this.x = this.initX;
+      this.y = this.initY;
+      break;
+    } //
+  };
 }
-Rectangle.prototype = Object.create(Control.prototype);
-Rectangle.prototype.constructor = Rectangle;
-Rectangle.prototype.draw = function () {
-  if (this.visible) {
-    ctx.fillStyle = this.color;
-    ctx.strokeStyle = this.outlineColor;
-    ctx.lineWidth = this.outlineWidth;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-    this.drawParts_outline();
-    this.drawParts_patterns();
-    if (this.doTranslate) {
-      ctx.translate(this.x, this.y);
-    }
-  }
-};
-Rectangle.prototype.drawParts_outline = function () {
-  switch (this.outlinePosition.toLowerCase()) {
-  case "inner":
-    ctx.strokeRect(this.x + this.outlineWidth / 2, this.y + this.outlineWidth / 2, this.width - this.outlineWidth, this.height - this.outlineWidth);
-    break;
-  case "center":
-    ctx.strokeRect(this.x, this.y, this.width, this.height);
-    break;
-  case "outer":
-    ctx.strokeRect(this.x - this.outlineWidth / 2, this.y - this.outlineWidth / 2, this.width + this.outlineWidth, this.height + this.outlineWidth);
-    break;
-  }
-};
-Rectangle.prototype.drawParts_patterns = function () {
-  switch (this.doPattern.toLowerCase()) {
-  case "diagonals":
-    ctx.beginPath();
-    var x1 = this.x;
-    var y1 = this.y;
-    var x2 = this.x;
-    var y2 = this.y;
-    var increment = 6;
-    var count = 0;
-    while (!(x1 == this.x + this.width)) {
-      x1++;
-      y2++;
-      count++;
-      if (count == increment) {
-        count = 0;
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-      }
-    }
-    while (!(y2 == this.y + this.height)) {
-      y1++;
-      y2++;
-      count++;
-      if (count == increment) {
-        count = 0;
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-      }
-    }
-    while (!(y1 == this.y + this.height)) {
-      y1++;
-      x2++;
-      count++;
-      if (count == increment) {
-        count = 0;
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-      }
-    }
-    ctx.stroke();
-    this.x = this.initX;
-    this.y = this.initY;
-    break;
-  } //
-};
 /*--------------------------------------Function-19-----------------------------------------------------------------*/
 function Circle(x: number, y: number, radius: number) {
   Control.call(this, x, y); //Inherit from Control
