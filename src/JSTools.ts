@@ -435,7 +435,6 @@ export {
   getRandomColor,
   windowRatio,
   canvasRatio,
-  toolBarHeight,
   canvasScale,
   resizeCanvas,
   toRadian,
