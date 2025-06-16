@@ -16,13 +16,14 @@ if (canvas == null) {
 }
 
 document.body.onresize = resizeCanvas;
-if (document.readyState === "loading") {
-  // Loading hasn't finished yet
-  document.addEventListener("DOMContentLoaded", resizeCanvas);
-} else {
-  // `DOMContentLoaded` has already fired
-  resizeCanvas();
-}
+document.body.onload = resizeCanvas;
+// if (document.readyState === "loading") {
+//   // Loading hasn't finished yet
+//   document.body.addEventListener("DOMContentLoaded", resizeCanvas);
+// } else {
+//   // `DOMContentLoaded` has already fired
+//   resizeCanvas();
+// }
 
 //toolBar
 element("backToIndex")!.onclick = backToIndex;
