@@ -1,4 +1,6 @@
 import { c as ctx, canvas } from "./Monopoly/Initialization";
+import './globals';
+
 /*--------------------------------------Function-1------------------------------------------------------------------*/
 function backToIndex(){ /*collapse(1,313)*/
   var currentURL = location.href;
@@ -18,27 +20,23 @@ function getRandomColor() {
   return color;
 }
 /*--------------------------------------Function-4------------------------------------------------------------------*/
-var windowRatio;
-var canvasRatio;
-(window as any).toolBarHeight = 27;
-let canvasScale : number;
 function resizeCanvas(){
   //Get Window Ratio
-  windowRatio = window.innerWidth / (window.innerHeight - (window as any).toolBarHeight);
+  (window as any).globals.windowRatio = window.innerWidth / (window.innerHeight - (window as any).globals.toolBarHeight);
   //Get Canvas Ratio
-  canvasRatio = canvas.width / canvas.height;
-  if (canvasRatio > windowRatio) {
+  (window as any).globals.canvasRatio = canvas.width / canvas.height;
+  if ((window as any).globals.canvasRatio > (window as any).globals.windowRatio) {
     canvas.style.width = window.innerWidth + "px";
     canvas.style.height = "";
     canvas.style.left = "0px";
-    canvas.style.top = ((window.innerHeight - (window as any).toolBarHeight) / 2 - (window.innerWidth / canvasRatio) / 2 + (window as any).toolBarHeight) + "px";
-    canvasScale = Number(canvas.style.width.replace("px", "")) / canvas.width;
-  } else if (canvasRatio <= windowRatio) {
+    canvas.style.top = ((window.innerHeight - (window as any).globals.toolBarHeight) / 2 - (window.innerWidth / (window as any).globals.canvasRatio) / 2 + (window as any).globals.toolBarHeight) + "px";
+    (window as any).globals.canvasScale = Number(canvas.style.width.replace("px", "")) / canvas.width;
+  } else if ((window as any).globals.canvasRatio <= (window as any).globals.windowRatio) {
     canvas.style.width = "";
-    canvas.style.height = window.innerHeight - (window as any).toolBarHeight + "px";
-    canvas.style.left = (window.innerWidth / 2 - ((window.innerHeight - (window as any).toolBarHeight) * canvasRatio) / 2) + "px";
-    canvas.style.top = (window as any).toolBarHeight + "px";
-    canvasScale = Number(canvas.style.height.replace("px", "")) / canvas.height;
+    canvas.style.height = window.innerHeight - (window as any).globals.toolBarHeight + "px";
+    canvas.style.left = (window.innerWidth / 2 - ((window.innerHeight - (window as any).globals.toolBarHeight) * (window as any).globals.canvasRatio) / 2) + "px";
+    canvas.style.top = (window as any).globals.toolBarHeight + "px";
+    (window as any).globals.canvasScale = Number(canvas.style.height.replace("px", "")) / canvas.height;
   }
 }
 /*--------------------------------------Function-5------------------------------------------------------------------*/

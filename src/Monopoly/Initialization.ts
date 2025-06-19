@@ -1,6 +1,7 @@
 import { Place } from "./Classes";
 import { element, resizeCanvas, getCookie, backToIndex } from "../JSTools";
 import { setLanguage } from "../../resources/languages/Monopoly";
+import '../globals';
 
 // <select> ONLOAD=
 var dropdownLanguage = element('dropdownLanguage') as HTMLSelectElement;
