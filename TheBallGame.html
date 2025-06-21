@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<?php include("php/track_code.php") ?>
+<html>
+<head> <!-- collapse(68,79) -->
+  <title>Jogo da Bolinha</title>
+	<link rel="icon" href="./assets/Bolinha_icon-CSuaVAcW.ico"/>
+	<meta charset="UTF-8"/>
+	<style> <!-- collapseit -->
+	  body {
+	    margin: 0px;
+		  width: 100%;
+		  height: 100%;
+		  background-color: darkblue;
+	  }
+	  #canvas {
+	    margin: 0px;
+		  position: fixed;
+		  left: 0;
+		  padding: 0px;
+	  }
+	  #toolBar {
+	    background-color: black;
+		  position: fixed;
+		  top: 0;
+		  left: 0;
+		  padding: 0px;
+		  width: 100%;
+	  }
+	  div * {
+	    margin: 3px 0px 0px 20px;
+	  }
+	  .labeledInput {
+	    margin-left: 5px;
+	  }
+	  span {
+	    color: white;
+		  font-family: Arial Black;
+		  font-size: 13px;
+	  }
+	  iframe {
+	    top: 0px;
+	    left: 0px;
+	  }
+	  #background {
+	    position: fixed;
+		  left: 0px;
+		  top: 0px;
+		  z-index: -1;
+	  }
+	</style><!--</body>-->
+  <script type="module" crossorigin src="./assets/theballgame-CNc2HfvB.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/JSTools-KphVFHC3.js">
+</head>
+<body>
+  <canvas id="canvas" width="1020" height="640">O teu browser não suporta a tag canvas do HTML5.</canvas>
+	<div id="toolBar">
+	  <button id="backToIndex">Voltar</button>
+	  <button id="reloadButton">Recarregar</button>
+	  <button id="downloadGame">Descarregar Jogo</button>
+	  <select id="dropdownLanguage">
+	    <option value="pt">Português</option>
+	    <option value="en">English</option>
+	  </select>
+	</div>
+	<div name="background-FullSize" id="background"></div>
+	<script name="Define Language">setLanguage(getCookie("language"))</script>
+	<script name="Initialization"> /* collapseit */
+	  
+	</script>
+  <script name="Events">
+    
+  </script>
+  <script name="Classes">
+    
+    
+    </script>
+  <script name="Real Code"> /*collapseit*/
+    
+	</script>
+<!-- Changelog
+Um Crash está a acontecer quando se faz o show() duma window.
+Ver linha 448.
+.Fixed a Crash. Causa do problema: usado lenght em vez de length. 23/07/2017
+23/07/2017
+Uma window acabada de ser criada em game começa logo a aparecer?
+Ver linha 550.
+Steps:
+ Clicar em Jogar;
+ EXECUTAR: game.container.test = new Window(700, 400);
+30/07/2017
+Problema de 23/07 resolvido. Usadas duas propriedades novas: Window.showing e Window.hiding.
+Outro problema: a Window está a aparecer atrás do resto, em vez de à frente. Steps acima. Ver linha 431.
+Steps acima. Substituir 400 por 500, ou seja, usar: game.container.test = new Window(700, 500);
+07/08/2017
+Problema de 30/07 resolvido. A variável i do GameState estava a passar para o draw da Window. Substituída por j.
+Falta colocar isso no ficheiro dos erros comuns. Feito. E queria ver se o jogo pára quando se perde, ou é preciso parar o jogo quando a window final aparecer. É preciso parar.
+11/08/2017
+Comecei a fazer o Button no JSTools.
+11/09/2017
+Já está a desenhar a parte do retângulo.
+Renomeado xIsCenter para xAlign.
+Troquei a ordem de chamada das funções de update e draw da Label e da TextButton, update primeiro. Isto para quando o GameState começa a sua parte, começa logo por atualizar e só depois desenhar. OOPS, não fiz isto no mesmo lugar da Window. Resolvido.
+Falta desenhar o Texto no retângulo.
+23/09/2017
+Renomeado yLine para yAlign.
+O Button contém um objeto Label, o qual já inclui a variável do texto.
+O Button vai ser centrado nas suas coordenadas por predefinição, para prevenir descoordenação com o autoResize.
+Já está a desenhar a parte da label.
+Falta fazer a parte dos Eventos, para o botão diminuir para ex: 0.7 = 70% ao passar o rato.
+Os ficheiros JS incluidos já são atualizados a cada reload.
+27/10/2017
+Mas é pra diminuir o botão ao passar o rato ou aumentar?? A TextButton aumenta. Acho que vou usar o mesmo sistema que a TextButton, ou seja o botão aumenta de tamanho ao passar por cima e não muda nada ao clicar.
+29/10/2017
+Alterei, na declaração da label do Button, os valores de x e y de "x+width/2" para "x", porque a label vai ser desenhada exatamente nas coordenadas do Button, e não mais à frente.
+Ao instanciar as TextButtons, vou passar a dizer em quanto o tamanho vai aumentar, em vez de pra quanto. Ele saberá para quanto vai aumentar. (mentira, afinal ele apenas aumenta uma vez, e diminui uma vez)
+O outlineWidth = 8 da TextButton passou para a definição da classe.
+Problema: Como manter o tamanho do texto sempre o mesmo? Preciso que sejam passados à TextButton os valores de textHeight e de incremento.
+Ver TextButton e TextButton.onhover.
+Steps:
+ Abrir a página;
+ Passar rato em cima das opções.
+01/12/2017
+Movi as atualizações do context da Label, do draw() para o novo updateContext(). Faz mais sentido, e será necessário fazer esse update antes dos outros updates para poder prever a largura do texto. Também já o coloquei junto com os outros updates.
+Para o último problema, fiz com que o tamanho apenas aumentasse uma vez depois do rato entrar. O mesmo para quando ele sai.
+08/12/2017
+Alterei o nome de algumas propriedades da TextButton para internal_... para distinguir as variáveis que apenas servem para o funcionamento do objeto, e não deverão ser alteradas manualmente.
+A seguir posso tentar impedir o botão de acionar por clicar fora e largar dentro, usando uma variável internal_waitingForPress, ou recomeçar a olhar para o Button pra ver o que falta.
+10/12/2017
+Melhorei a atualização do internal_hovered da TextButton, está mais coerente e simples agora.
+Falta fazer com que quando está uma window aberta, os botões que estão atrás não funcionem.
+Copiei o onhover do textButton para o Button. Experimentei colocar um botão dentro de uma window no mainMenu e verifiquei que o tamanho do texto do button altera-se quando passo o rato "por cima" do DESCARREGAR. Terá a ver com o último update do textHeight?
+15/04/2018
+O GameState tem os dias contados.
+FINALMENTE VIM!!!!!!!!!!!!!!!!!!!!!!
+16/11/2018
+lol
+24/12/2018
+A propriedade da classe Control, showIndex, passará a definir a ordem, não só em que os gráficos são desenhados, como também a ordem em que um evento de clique é executado. O ultimo retângulo a ser desenhado é o primeiro a ser comparada a localização com o local de clique.
+
+-->
+</body>
+</html>
