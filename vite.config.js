@@ -10,6 +10,7 @@ export default defineConfig({
       input: {
         index: resolve(__dirname, 'index.html'),
         monopoly: resolve(__dirname, 'Monopoly.html'),
+        theballgame: resolve(__dirname, 'TheBallGame.html'),
       },
     },
     sourcemap: true

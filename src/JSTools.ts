@@ -304,45 +304,50 @@ Circle.prototype.goTo = function (newX: number, newY: number) {
   this.y = newY + this.radius;
 };
 /*--------------------------------------Function-20-----------------------------------------------------------------*/
-function Label(x: number, y: number, text: number, xAlign: number) {
-  Control.call(this, x, y); //Inherit from Control
-  this.text = text;
-  this.color = "white";
-  this.outlineColor = transparent;
-  this.textHeight = 30;
-  this.fontFamily = "Tahoma";
-  this.xAlign = xAlign; //Horizontal Aligning
-  this.yAlign = "middle"; //Vertical Aligning
-}
-Label.prototype = Object.create(Control.prototype);
-Label.prototype.constructor = Label;
-Label.prototype.updateContext = function () {
-  if (this.visible) {
-    ctx.fillStyle = this.color;
-    ctx.textAlign = this.xAlign;
-    ctx.textBaseline = this.yAlign;
-    ctx.strokeStyle = this.outlineColor;
-    ctx.lineWidth = this.outlineWidth;
-    ctx.font = "bold " + this.textHeight + "px " + this.fontFamily;
+class Label extends Control {
+  text: string;
+  textHeight: number;
+  fontFamily: string;
+  xAlign: "start" | "center";
+  yAlign: CanvasTextBaseline;
+  constructor(x: number, y: number, text: string, xAlign: "start" | "center") {
+    super(x, y); //Inherit from Control
+    this.text = text;
+    this.color = "white";
+    this.outlineColor = transparent;
+    this.textHeight = 30;
+    this.fontFamily = "Tahoma";
+    this.xAlign = xAlign; //Horizontal Aligning
+    this.yAlign = "middle"; //Vertical Aligning
   }
-}
-Label.prototype.draw = function () {
-  if (this.visible) {
-    /*
-    var something;
-    if (this.xAlign) {
-      something = this.x - c.measureText(this.text).width / 2;
-    } else {
-      something = this.x;
-    }*/ //Substituido por c.textAlign
-    
-    ctx.strokeText(this.text, this.x, this.y);
-    ctx.fillText(this.text, this.x, this.y);
+  updateContext () {
+    if (this.visible) {
+      ctx.fillStyle = this.color;
+      ctx.textAlign = this.xAlign;
+      ctx.textBaseline = this.yAlign;
+      ctx.strokeStyle = this.outlineColor;
+      ctx.lineWidth = this.outlineWidth;
+      ctx.font = "bold " + this.textHeight + "px " + this.fontFamily;
+    }
   }
-};
-Label.prototype.updateLanguage = function () {
-  this.text = "<!ERROR!>";
-};
+  draw () {
+    if (this.visible) {
+      /*
+      var something;
+      if (this.xAlign) {
+        something = this.x - c.measureText(this.text).width / 2;
+      } else {
+        something = this.x;
+      }*/ //Substituido por c.textAlign
+      
+      ctx.strokeText(this.text, this.x, this.y);
+      ctx.fillText(this.text, this.x, this.y);
+    }
+  };
+  updateLanguage () {
+    this.text = "<!ERROR!>";
+  };
+}
 /*--------------------------------------Function-20-----------------------------------------------------------------*/
 function Button(x: number, y: number, width: number, height: number, text: string) {
   Rectangle.call(this, x, y, 50, 81); 
