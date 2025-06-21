@@ -1,3 +1,9 @@
+import "../../resources/languages/TheBallGame";
+import { AnimationLOOP, download, Label, Rectangle } from "../JSTools";
+import { c } from "./Initialization";
+import { setKeyStates } from "./Events";
+import { Ball, GameState, TextButton } from "./Classes";
+
 var game = new GameState();
 var mainMenu = new GameState();
 var options = new GameState();
@@ -13,19 +19,19 @@ game.container.lava.color = "orange";
 game.container.lava.outlineColor = "red";
 game.container.lava.outlineWidth = 2;
 game.container.lava.outlinePosition = "inner";
-game.container.backToMenu_opt = new TextButton(game.width/2, 50, backToMenu_lang, "center", 40, 5);
-game.container.backToMenu_opt.updateLanguage = function(){this.text=backToMenu_lang};
-mainMenu.container.playGame_opt = new TextButton(game.width/2, 130, playGameOption_lang, "center", 50, 5);
-mainMenu.container.playGame_opt.updateLanguage = function(){this.text=playGameOption_lang};
-mainMenu.container.options_opt = new TextButton(game.width/2, 220, optionsOption_lang, "center", 50, 5);
-mainMenu.container.options_opt.updateLanguage = function(){this.text=optionsOption_lang};
-mainMenu.container.download_opt = new TextButton(game.width/2, 310, downloadOption_lang, "center", 50, 5);
-mainMenu.container.download_opt.updateLanguage = function(){this.text=downloadOption_lang};
-options.container.exitOptions_opt = new TextButton(30, 30, exitOptionsButton_lang, "start", 30, 5);
-options.container.exitOptions_opt.updateLanguage = function(){this.text=exitOptionsButton_lang};
-options.container.optionsSoon = new Label(game.width/2, game.height/2 - 15, optionsSoon_lang, "center");
+game.container.backToMenu_opt = new TextButton(game.width/2, 50, (window as any).globals.backToMenu_lang, "center", 40, 5);
+game.container.backToMenu_opt.updateLanguage = function(){this.text=(window as any).globals.backToMenu_lang};
+mainMenu.container.playGame_opt = new TextButton(game.width/2, 130, (window as any).globals.playGameOption_lang, "center", 50, 5);
+mainMenu.container.playGame_opt.updateLanguage = function(){this.text=(window as any).globals.playGameOption_lang};
+mainMenu.container.options_opt = new TextButton(game.width/2, 220, (window as any).globals.optionsOption_lang, "center", 50, 5);
+mainMenu.container.options_opt.updateLanguage = function(){this.text=(window as any).globals.optionsOption_lang};
+mainMenu.container.download_opt = new TextButton(game.width/2, 310, (window as any).globals.downloadOption_lang, "center", 50, 5);
+mainMenu.container.download_opt.updateLanguage = function(){this.text=(window as any).globals.downloadOption_lang};
+options.container.exitOptions_opt = new TextButton(30, 30, (window as any).globals.exitOptionsButton_lang, "start", 30, 5);
+options.container.exitOptions_opt.updateLanguage = function(){this.text=(window as any).globals.exitOptionsButton_lang};
+options.container.optionsSoon = new Label(game.width/2, game.height/2 - 15, (window as any).globals.optionsSoon_lang, "center");
 options.container.optionsSoon.textHeight = 100;
-options.container.optionsSoon.updateLanguage = function(){this.text=optionsSoon_lang};
+options.container.optionsSoon.updateLanguage = function(){this.text=(window as any).globals.optionsSoon_lang};
 { // onClick events for the TextButtons
   game.container.backToMenu_opt.onclick = function () {
     game.visible = false;
@@ -56,8 +62,8 @@ options.container.optionsSoon.updateLanguage = function(){this.text=optionsSoon_
 //debug
 var debugMode = false;
 var debugTax = 6;
-var debugFrameRate;
-var debugTimer;
+var debugFrameRate: number;
+var debugTimer: number;
 
 //var gameState = "mainMenu"; /*	'mainMenu'	'game'	'options'	*/
 /*------------------------------------LOOP-----------------------------------------*/  
@@ -106,9 +112,11 @@ AnimationLOOP(function(){
 /*------------------------------------FUNCTIONS------------------------------------*/
 function drawDebug() { /* collapseit */
   if (!document.hasFocus()) {
-    rightIsDown = false;
-    leftIsDown = false;
-    upIsDown = false;
+    setKeyStates({
+      upIsDown: false,
+      leftIsDown: false,
+      rightIsDown: false,
+    })
   }
   if (debugMode) {
     c.fillStyle = "white";
@@ -118,7 +126,9 @@ function drawDebug() { /* collapseit */
       debugTax = 0;
       debugFrameRate = (new Date().getTime()) - debugTimer;
     }
-    c.fillText(debugFrameRate, game.width - 40, 40);
+    c.fillText(String(debugFrameRate), game.width - 40, 40);
   }
   debugTimer = new Date().getTime();
 }
+
+export { game };

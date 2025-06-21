@@ -282,27 +282,31 @@ class Rectangle extends Control {
   };
 }
 /*--------------------------------------Function-19-----------------------------------------------------------------*/
-function Circle(x: number, y: number, radius: number) {
-  Control.call(this, x, y); //Inherit from Control
-  this.radius = radius;
-}
-Circle.prototype = Object.create(Control.prototype);
-Circle.prototype.constructor = Circle;
-Circle.prototype.draw = function () {
-  if (this.visible) {
-    ctx.beginPath();
-    ctx.fillStyle = this.color;
-    ctx.strokeStyle = this.outlineColor;
-    ctx.lineWidth = this.outlineWidth;
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
+class Circle extends Control {
+  radius: number;
+
+  constructor(x: number, y: number, radius: number) {
+    super(x, y); // Inherit from Control
+    this.radius = radius;
+  }
+
+  draw() {
+    if (this.visible) {
+      ctx.beginPath();
+      ctx.fillStyle = this.color;
+      ctx.strokeStyle = this.outlineColor;
+      ctx.lineWidth = this.outlineWidth;
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+  }
+
+  goTo(newX: number, newY: number) {
+    this.x = newX + this.radius;
+    this.y = newY + this.radius;
   }
 }
-Circle.prototype.goTo = function (newX: number, newY: number) {
-  this.x = newX + this.radius;
-  this.y = newY + this.radius;
-};
 /*--------------------------------------Function-20-----------------------------------------------------------------*/
 class Label extends Control {
   text: string;

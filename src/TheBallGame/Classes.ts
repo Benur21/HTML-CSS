@@ -1,7 +1,7 @@
-import { livesText_lang, scoreText_lang } from "../../resources/languages/The Ball Game";
-import { Label, transparent } from "../JSTools";
-import { mouseIsDown, mouseX, mouseY } from "./Events";
-import { c } from "./Initialization";
+import { Circle, distance, Label, Rectangle, transparent } from "../JSTools";
+import { downIsDown, leftIsDown, mouseIsDown, mouseX, mouseY, rightIsDown, setKeyStates, upIsDown } from "./Events";
+import { bellRing, c, canvas, click } from "./Initialization";
+import { game } from "./Main";
 
 class TextButton extends Label {
   hoveringHeightIncrement: number;
@@ -91,10 +91,10 @@ class PlayerInfo extends Label {/*collapseit*/
     this.count = startCount;
     switch (this.type.toLowerCase()) {
     case "lives":
-      this.text = livesText_lang;
+      this.text = (window as any).globals.livesText_lang;
       break;
     case "score":
-      this.text = scoreText_lang;
+      this.text = (window as any).globals.scoreText_lang;
       break;
     }
   }
@@ -126,10 +126,10 @@ class Ball extends Circle {
   }
 
   drawText() {
-    this.lives.text = livesText_lang + " = " + this.lives.count;
+    this.lives.text = (window as any).globals.livesText_lang + " = " + this.lives.count;
     this.lives.updateContext();
     this.lives.draw();
-    this.score.text = scoreText_lang + " = " + this.score.count;
+    this.score.text = (window as any).globals.scoreText_lang + " = " + this.score.count;
     this.score.updateContext();
     this.score.draw();
   }
@@ -221,7 +221,11 @@ class Ball extends Circle {
             alert(`Perdeste com ${this.score.count} Ponto${this.score.count === 1 ? "" : "s"}!!`);
             this.score.count = 0;
             this.lives.count = 5;
-            upIsDown = rightIsDown = leftIsDown = false;
+            setKeyStates({
+              upIsDown: false,
+              rightIsDown: false,
+              leftIsDown: false,
+            });
           }
         }
       }
@@ -455,185 +459,203 @@ class Ball extends Circle {
 //   this.visible = true;
 // };
 
-function GameState () { /*collapseit*/
-  Rectangle.call(this, canvas.width / 2 - 500, canvas.height / 2 - 300, 1000, 600);
-  this.outlinePosition = "outer";
-  this.color = "#2f538e";
-  this.visible = false;
-  this.doTranslate = true;
-  this.container = new Object();
+class GameState extends Rectangle { /*collapseit*/
+  container: { [key: string]: any };
+  constructor() {
+    super(canvas.width / 2 - 500, canvas.height / 2 - 300, 1000, 600);
+    this.outlinePosition = "outer";
+    this.color = "#2f538e";
+    this.visible = false;
+    this.doTranslate = true;
+    this.container = new Object();
+  }
+  // getAllProperties() {
+  //   var properties = [];
+  //   for (var prop in this) {
+  //     if (this.hasOwnProperty(prop) && typeof this[prop] !== "function") {
+  //       properties.push(this[prop]);
+  //     }
+  //   }
+  //   return properties;
+  // };
+  draw() { /*collapseit*/
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    if (this.visible) { //Draw itself
+      c.lineWidth = this.outlineWidth;
+      c.fillStyle = this.color;
+      c.strokeStyle = this.outlineColor;
+      c.lineWidth = this.outlineWidth;
+      c.fillRect(this.x, this.y, this.width, this.height);
+      this.drawParts_outline();
+      this.drawParts_patterns();
+    }
+    if (this.doTranslate) {
+      c.translate(this.x, this.y);
+    }
+    if (this.visible) {
+      var contents = this.container.getAllProperties();
+      
+      //Order controls by showIndex
+      var indices = [];
+      var controls = [];
+      for (let i = 0; i < contents.length; i++) {
+        if (typeof contents[i] == "object" && typeof contents[i].showIndex == "number") {
+          indices.push(i);
+          controls.push(contents[i]);
+        }
+      }
+      controls.sort(function(a,b){return a.showIndex-b.showIndex}); //Lower is drawn first, in back.
+      for (let i = 0; i < controls.length; i++) {
+        contents[indices[i]] = controls[i];
+      }
+      //Draw everything in its container
+      for (let i = 0; i < contents.length; i++) { //Lembrar que também há um destes na Window.
+        switch (typeof(contents[i])) {
+        case "object":
+          if (contents[i]instanceof TextButton) {
+            contents[i].update();
+            contents[i].draw();
+          } else if (contents[i]instanceof Label) {
+            contents[i].updateLanguage();
+            contents[i].updateContext();
+            contents[i].draw();
+          } else if (contents[i]instanceof Window) {
+            contents[i].draw();
+            contents[i].updatePos();
+          } else if (contents[i]instanceof Ball) {
+            contents[i].drawText();
+            contents[i].checkPos();
+            contents[i].draw();
+            contents[i].updatePos();
+            contents[i].delayStop();
+          } else {
+            contents[i].draw();
+          }
+          break;
+        case "function":
+          if (!(contents[i].toString().includes("getAllInstances")||contents[i].toString().includes("getAllProperties"))) {
+            contents[i]();
+          }
+          break;
+        }
+      }
+    }
+  };
 }
-GameState.prototype = Object.create(Rectangle.prototype);
-GameState.prototype.constructor = GameState;
-GameState.prototype.draw = function () { /*collapseit*/
-  c.setTransform(1, 0, 0, 1, 0, 0);
-  if (this.visible) { //Draw itself
-    c.lineWidth = this.outlineWidth;
-    c.fillStyle = this.color;
-    c.strokeStyle = this.outlineColor;
-    c.lineWidth = this.outlineWidth;
-    c.fillRect(this.x, this.y, this.width, this.height);
-    this.drawParts_outline();
-    this.drawParts_patterns();
-  }
-  if (this.doTranslate) {
-    c.translate(this.x, this.y);
-  }
-  if (this.visible) {
-    var contents = this.container.getAllProperties();
-    
-    //Order controls by showIndex
-    var indices = [];
-    var controls = [];
-    for (i = 0; i < contents.length; i++) {
-      if (typeof contents[i] == "object" && typeof contents[i].showIndex == "number") {
-        indices.push(i);
-        controls.push(contents[i]);
-      }
-    }
-    controls.sort(function(a,b){return a.showIndex-b.showIndex}); //Lower is drawn first, in back.
-    for (i = 0; i < controls.length; i++) {
-      contents[indices[i]] = controls[i];
-    }
-    //Draw everything in its container
-    for (i = 0; i < contents.length; i++) { //Lembrar que também há um destes na Window.
-      switch (typeof(contents[i])) {
-      case "object":
-        if (contents[i]instanceof TextButton) {
-          contents[i].update();
-          contents[i].draw();
-        } else if (contents[i]instanceof Label) {
-          contents[i].updateLanguage();
-          contents[i].updateContext();
-          contents[i].draw();
-        } else if (contents[i]instanceof Window) {
-          contents[i].draw();
-          contents[i].updatePos();
-        } else if (contents[i]instanceof Ball) {
-          contents[i].drawText();
-          contents[i].checkPos();
-          contents[i].draw();
-          contents[i].updatePos();
-          contents[i].delayStop();
-        } else {
-          contents[i].draw();
-        }
-        break;
-      case "function":
-        if (!(contents[i].toString().includes("getAllInstances")||contents[i].toString().includes("getAllProperties"))) {
-          contents[i]();
-        }
-        break;
-      }
-    }
-  }
-};
 
-function Window (width, height) { /*collapseit*/
-  Rectangle.call(this, canvas.width/2 - width/2, -height, width, height);
-  this.doTranslate = true;
-  this.color = "#1062e8";
-  this.outlinePosition = "inner";
-  this.showIndex = 100;
-  this.maxYMoveSpeed = 40;
-  this.showing = false;
-  this.hiding = false;
-  this.container = new Object();
-}
-Window.prototype = Object.create(Rectangle.prototype);
-Window.prototype.constructor = Window;
-Window.prototype.draw = function () { /*collapseit*/
-  c.setTransform(1, 0, 0, 1, 0, 0);
-  if (this.visible) { //Draw itself
-    c.lineWidth = this.outlineWidth;
-    c.fillStyle = this.color;
-    c.strokeStyle = this.outlineColor;
-    c.lineWidth = this.outlineWidth;
-    c.fillRect(this.x, this.y, this.width, this.height);
-    this.drawParts_outline();
-    this.drawParts_patterns();
+class Window extends Rectangle { /*collapseit*/
+  maxYMoveSpeed: number;
+  showing: boolean;
+  hiding: boolean;
+  container: {};
+  constructor(width: number, height: number) {
+    super(canvas.width/2 - width/2, -height, width, height);
+    this.doTranslate = true;
+    this.color = "#1062e8";
+    this.outlinePosition = "inner";
+    this.showIndex = 100;
+    this.maxYMoveSpeed = 40;
+    this.showing = false;
+    this.hiding = false;
+    this.container = new Object();
   }
-  if (this.doTranslate) {
-    c.translate(this.x, this.y);
-  }
-  if (this.visible) {
-    var contents = this.container.getAllProperties();
-    //Order controls by showIndex
-    var indices = [];
-    var controls = [];
-    for (j = 0; j < contents.length; j++) {
-      if (typeof contents[j] == "object" && typeof contents[j].showIndex == "number") {
-        indices.push(j);
-        controls.push(contents[j]);
-      }
+  draw() { /*collapseit*/
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    if (this.visible) { //Draw itself
+      c.lineWidth = this.outlineWidth;
+      c.fillStyle = this.color;
+      c.strokeStyle = this.outlineColor;
+      c.lineWidth = this.outlineWidth;
+      c.fillRect(this.x, this.y, this.width, this.height);
+      this.drawParts_outline();
+      this.drawParts_patterns();
     }
-    controls.sort(function(a,b){return b.showIndex-a.showIndex});
-    for (j = 0; j < controls.length; j++) {
-      contents[indices[j]] = controls[j];
+    if (this.doTranslate) {
+      c.translate(this.x, this.y);
     }
-    //Draw everything in its container
-    for (j = 0; j < contents.length; j++) { //Lembrar que também há um destes na GameState.
-      switch (typeof(contents[j])) {
-      case "object":
-        if (contents[j]instanceof TextButton) {
-          contents[j].update();
-          contents[j].draw();
-        } else if (contents[j]instanceof Label) {
-          contents[j].updateLanguage();
-          contents[i].updateContext();
-          contents[j].draw();
-        } else if (contents[j]instanceof Ball) {
-          contents[j].drawText();
-          contents[j].checkPos();
-          contents[j].draw();
-          contents[j].updatePos();
-          contents[j].delayStop();
-        } else {
-          contents[j].draw();
+    if (this.visible) {
+      var contents = this.container.getAllProperties();
+      //Order controls by showIndex
+      var indices = [];
+      var controls = [];
+      for (let j = 0; j < contents.length; j++) {
+        if (typeof contents[j] == "object" && typeof contents[j].showIndex == "number") {
+          indices.push(j);
+          controls.push(contents[j]);
         }
-        break;
-      case "function":
-        if (!(contents[j].toString().includes("getAllInstances")||contents[j].toString().includes("getAllProperties"))) {
-          contents[j]();
-        }
-        break;
       }
+      controls.sort(function(a,b){return b.showIndex-a.showIndex});
+      for (let j = 0; j < controls.length; j++) {
+        contents[indices[j]] = controls[j];
+      }
+      //Draw everything in its container
+      for (let j = 0; j < contents.length; j++) { //Lembrar que também há um destes na GameState.
+        switch (typeof(contents[j])) {
+        case "object":
+          if (contents[j]instanceof TextButton) {
+            contents[j].update();
+            contents[j].draw();
+          } else if (contents[j]instanceof Label) {
+            contents[j].updateLanguage();
+            contents[j].updateContext(); //TODO antes estava contents[i].updateContext(); verificar se funciona
+            contents[j].draw();
+          } else if (contents[j]instanceof Ball) {
+            contents[j].drawText();
+            contents[j].checkPos();
+            contents[j].draw();
+            contents[j].updatePos();
+            contents[j].delayStop();
+          } else {
+            contents[j].draw();
+          }
+          break;
+        case "function":
+          if (!(contents[j].toString().includes("getAllInstances")||contents[j].toString().includes("getAllProperties"))) {
+            contents[j]();
+          }
+          break;
+        }
+      }
+      
     }
-    
-  }
-  c.setTransform(1, 0, 0, 1, 0, 0);
-  c.translate(game.x, game.y); //considering that there is a game GameState
-};
-Window.prototype.updatePos = function () { /*collapseit*/
-  var showProgress = distance(0, this.y, 0, canvas.height / 2 - this.height / 2) /*Current*/ /
-                      distance(0, -this.height, 0, canvas.height / 2 - this.height / 2) /*Total*/;
-  var hideProgress = distance(0, this.y, 0, canvas.height) /*Current*/ /
-                      distance(0, canvas.height / 2 - this.height / 2, 0, canvas.height) /*Total*/;
-  if (this.showing) {
-    this.y += this.maxYMoveSpeed*showProgress;
-    if (Math.round(this.y) == Math.round(canvas.height / 2 - this.height / 2)) {
-      this.showing = false;
-    }
-  }
-  if (this.hiding) {
-    this.y += this.maxYMoveSpeed*(1-hideProgress)+1;
-    if (this.y > canvas.height) {
-      this.hiding = false;
-    }
-  }
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    c.translate(game.x, game.y); //considering that there is a game GameState
+  };
   
+  updatePos() { /*collapseit*/
+    var showProgress = distance(0, this.y, 0, canvas.height / 2 - this.height / 2) /*Current*/ /
+                        distance(0, -this.height, 0, canvas.height / 2 - this.height / 2) /*Total*/;
+    var hideProgress = distance(0, this.y, 0, canvas.height) /*Current*/ /
+                        distance(0, canvas.height / 2 - this.height / 2, 0, canvas.height) /*Total*/;
+    if (this.showing) {
+      this.y += this.maxYMoveSpeed*showProgress;
+      if (Math.round(this.y) == Math.round(canvas.height / 2 - this.height / 2)) {
+        this.showing = false;
+      }
+    }
+    if (this.hiding) {
+      this.y += this.maxYMoveSpeed*(1-hideProgress)+1;
+      if (this.y > canvas.height) {
+        this.hiding = false;
+      }
+    }
+  };
+  
+  show() { /*collapseit*/
+    this.visible = true;
+    this.x = canvas.width/2 - this.width/2;
+    this.y = -this.height;
+    this.showing = true;
+    this.hiding = false;
+  };
+  
+  hide() { /*collapseit*/
+    this.visible = true;
+    this.x = canvas.width/2 - this.width/2;
+    this.y = canvas.height/2 - this.height/2;
+    this.showing = false;
+    this.hiding = true;
+  };
 }
-Window.prototype.show = function () { /*collapseit*/
-  this.visible = true;
-  this.x = canvas.width/2 - this.width/2;
-  this.y = -this.height;
-  this.showing = true;
-  this.hiding = false;
-};
-Window.prototype.hide = function () { /*collapseit*/
-  this.visible = true;
-  this.x = canvas.width/2 - this.width/2;
-  this.y = canvas.height/2 - this.height/2;
-  this.showing = false;
-  this.hiding = true;
-};
+
+export { TextButton, PlayerInfo, Ball, GameState, Window };
