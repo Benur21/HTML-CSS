@@ -1,5 +1,5 @@
 import { element, resizeCanvas, getCookie, backToIndex, download } from "../JSTools";
-import { setLanguage } from "../../resources/languages/TheBallGame";
+import { setLanguage } from "../languages/TheBallGame";
 import '../globals';
 import { onresize } from "./Events";
 

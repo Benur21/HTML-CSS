@@ -1,4 +1,4 @@
-import "../../resources/languages/TheBallGame";
+import "../languages/TheBallGame";
 import { AnimationLOOP, download, Label, Rectangle } from "../JSTools";
 import { c } from "./Initialization";
 import { setKeyStates } from "./Events";

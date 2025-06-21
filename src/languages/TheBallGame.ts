@@ -1,5 +1,5 @@
-﻿import { element } from "../../src/JSTools";
-import { canvas } from "../../src/TheBallGame/Initialization";
+﻿import { element } from "../JSTools";
+import { canvas } from "../TheBallGame/Initialization";
 
 function setLanguage(language: "en" | "pt") {
   switch (language) {
