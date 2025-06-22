@@ -509,7 +509,7 @@ class GameState extends Rectangle { /*collapseit*/
         contents[indices[i]] = controls[i];
       }
       //Draw everything in its container
-      for (let i = 0; i < contents.length; i++) { //Lembrar que também há um destes na Window.
+      for (let i = 0; i < contents.length; i++) { //Lembrar que também há um destes na JSWindow.
         switch (typeof(contents[i])) {
         case "object":
           if (contents[i]instanceof TextButton) {
@@ -519,7 +519,7 @@ class GameState extends Rectangle { /*collapseit*/
             contents[i].updateLanguage();
             contents[i].updateContext();
             contents[i].draw();
-          } else if (contents[i]instanceof Window) {
+          } else if (contents[i]instanceof JSWindow) {
             contents[i].draw();
             contents[i].updatePos();
           } else if (contents[i]instanceof Ball) {
@@ -543,7 +543,7 @@ class GameState extends Rectangle { /*collapseit*/
   };
 }
 
-class Window extends Rectangle { /*collapseit*/
+class JSWindow extends Rectangle { /*collapseit*/
   maxYMoveSpeed: number;
   showing: boolean;
   hiding: boolean;
@@ -658,4 +658,4 @@ class Window extends Rectangle { /*collapseit*/
   };
 }
 
-export { TextButton, PlayerInfo, Ball, GameState, Window };
+export { TextButton, PlayerInfo, Ball, GameState, JSWindow };
