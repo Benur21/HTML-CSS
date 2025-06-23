@@ -65,6 +65,10 @@ var debugTax = 6;
 var debugFrameRate: number;
 var debugTimer: number;
 
+// (window as any).globals.w = new JSWindow(700, 500);
+// (window as any).globals.w.visible = true;
+// (window as any).globals.w.show();
+
 //var gameState = "mainMenu"; /*	'mainMenu'	'game'	'options'	*/
 /*------------------------------------LOOP-----------------------------------------*/  
 AnimationLOOP(function(){
@@ -72,6 +76,8 @@ AnimationLOOP(function(){
   game.draw();
   mainMenu.draw();
   options.draw();
+  // (window as any).globals.w.draw();
+  // (window as any).globals.w.updatePos();
   /*switch (gameState) {
   case 'game':
     lava.draw();

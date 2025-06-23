@@ -543,6 +543,12 @@ class GameState extends Rectangle { /*collapseit*/
   };
 }
 
+/*
+ * JSWindow is a class that represents a window in the game, which can be shown or hidden.
+ * It extends the Rectangle class and has properties for size, position, and visibility.
+ * It also has methods for drawing the window, updating its position, and showing or hiding it.
+ * To use, its draw() and updatePos() methods should be called in the main loop.
+ */
 class JSWindow extends Rectangle { /*collapseit*/
   maxYMoveSpeed: number;
   showing: boolean;
