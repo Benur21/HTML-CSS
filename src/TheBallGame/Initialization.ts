@@ -23,13 +23,16 @@ const background = element("background")!;
 document.body.onresize = onresize;
 if (document.readyState === "loading") {
   // Loading hasn't finished yet
-  document.addEventListener("DOMContentLoaded", onresize);
+  document.addEventListener('DOMContentLoaded', () => {
+    onresize();
+    setLanguage(getCookie('language') as 'pt' | 'en');
+  });
 } else {
   // `DOMContentLoaded` has already fired
   onresize();
+  setLanguage(getCookie("language") as "pt" | "en");
 }
 
-setLanguage(getCookie("language") as "pt" | "en");
 
 //toolBar
 element("backToIndex")!.onclick = backToIndex;

@@ -33,10 +33,16 @@ var memD = memCanvas.getContext('2d');
 document.body.onresize = resizeCanvas;
 if (document.readyState === "loading") {
   // Loading hasn't finished yet
-  document.addEventListener("DOMContentLoaded", resizeCanvas);
+  document.addEventListener("DOMContentLoaded", () => {
+    resizeCanvas();
+    //Define language
+    setLanguage(getCookie("language") as "pt" | "en");
+  });
 } else {
   // `DOMContentLoaded` has already fired
   resizeCanvas();
+  //Define language
+  setLanguage(getCookie("language") as "pt" | "en");
 }
 
 function resizeCanvas() {
@@ -69,8 +75,3 @@ function drawRandomPixel(x: number, y: number) {
   c.lineTo(x + 1, y + 1);
   c.stroke();
 }
-
-//Define language
-setLanguage(getCookie("language") as "pt" | "en");
-
-export { canvas };

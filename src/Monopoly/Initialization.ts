@@ -20,10 +20,14 @@ if (canvas == null) {
 document.body.onresize = resizeCanvas;
 if (document.readyState === "loading") {
   // Loading hasn't finished yet
-  document.addEventListener("DOMContentLoaded", resizeCanvas);
+  document.addEventListener("DOMContentLoaded", () => {
+    resizeCanvas();
+    setLanguage(getCookie("language") as "pt" | "en");
+  });
 } else {
   // `DOMContentLoaded` has already fired
   resizeCanvas();
+  setLanguage(getCookie("language") as "pt" | "en");
 }
 
 //toolBar
@@ -39,8 +43,6 @@ if (ctx == null) {
 const canvasPadding = 10;
 resizeCanvas();
 const places: Place[] = [];
-
-setLanguage(getCookie("language") as "pt" | "en");
 
 export { canvasPadding, places };
 
