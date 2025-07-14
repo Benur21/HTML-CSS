@@ -1,6 +1,8 @@
 import { resizeCanvas } from "../JSTools";
-import { background, canvas } from "./Initialization";
+import { background } from "./Initialization";
 import { game } from "./Main";
+
+const canvas = (window as any).globals.canvas;
 
 var lastKey;
 var upIsDown = false;

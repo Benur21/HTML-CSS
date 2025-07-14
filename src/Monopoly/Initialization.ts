@@ -15,6 +15,7 @@ const canvas = element("canvas") as HTMLCanvasElement;
 if (canvas == null) {
   throw new Error("Canvas is null.");
 }
+(window as any).globals.canvas = canvas;
 
 document.body.onresize = resizeCanvas;
 if (document.readyState === "loading") {
@@ -39,7 +40,7 @@ const canvasPadding = 10;
 resizeCanvas();
 const places: Place[] = [];
 
-setLanguage(getCookie("language") as "pt" | "en")
+setLanguage(getCookie("language") as "pt" | "en");
 
-export { canvas, ctx as c, canvasPadding, places };
+export { canvasPadding, places };
 

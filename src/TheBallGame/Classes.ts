@@ -1,7 +1,10 @@
 import { Circle, distance, Label, Rectangle, transparent } from "../JSTools";
 import { downIsDown, leftIsDown, mouseIsDown, mouseX, mouseY, rightIsDown, setKeyStates, upIsDown } from "./Events";
-import { bellRing, c, canvas, click } from "./Initialization";
+import { bellRing, click } from "./Initialization";
 import { game } from "./Main";
+
+const canvas = (window as any).globals.canvas;
+const c = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
 
 class TextButton extends Label {
   hoveringHeightIncrement: number;

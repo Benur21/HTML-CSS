@@ -1,8 +1,9 @@
 import "../languages/TheBallGame";
 import { AnimationLOOP, download, Label, Rectangle } from "../JSTools";
-import { c } from "./Initialization";
 import { setKeyStates } from "./Events";
 import { Ball, GameState, TextButton } from "./Classes";
+
+const c = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
 
 var game = new GameState();
 var mainMenu = new GameState();
@@ -66,6 +67,7 @@ var debugFrameRate: number;
 var debugTimer: number;
 
 // (window as any).globals.w = new JSWindow(700, 500);
+// (window as any).globals.w.container.closeButton = new TextButton(0, 0, "X", "center", 20, 5);
 // (window as any).globals.w.visible = true;
 // (window as any).globals.w.show();
 

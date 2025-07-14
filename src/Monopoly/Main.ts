@@ -1,6 +1,8 @@
-import { canvas, canvasPadding, places } from './Initialization';
+import { canvasPadding, places } from './Initialization';
 import { Place, JSWindow } from './Classes';
 import { AnimationLOOP, Control, Rectangle } from '../JSTools';
+
+const canvas = (window as any).globals.canvas;
 
 var gameBoard = new Rectangle(canvasPadding, canvasPadding, canvas.width-canvasPadding*2, canvas.height-canvasPadding*2);
 gameBoard.doTranslate = true; //Space 980x980

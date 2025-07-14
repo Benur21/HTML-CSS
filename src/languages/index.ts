@@ -1,6 +1,6 @@
 ﻿import { element } from "../JSTools";
 
-function setLanguage(language) {
+function setLanguage(language: "en" | "pt") {
   switch (language) {
   case "en": //ENGLISH
     document.cookie = "language=" + language + "; expires=Thu, 01 Jan 2040 00:00:00 UTC; path=/;";
@@ -27,3 +27,5 @@ function setLanguage(language) {
     break;
   }
 }
+
+export { setLanguage };

@@ -15,6 +15,7 @@ const canvas = element("canvas") as HTMLCanvasElement;
 if (canvas == null) {
   throw new Error("Canvas is null.");
 }
+(window as any).globals.canvas = canvas;
 
 //Creating variables for the elements...
 const background = element("background")!;
@@ -56,4 +57,5 @@ var bellRing = new Audio("resources/BellRing.wav");
 //Resizing Canvas...
 resizeCanvas();
 
-export { canvas, ctx as c, click, bellRing, background };
+
+export { click, bellRing, background };

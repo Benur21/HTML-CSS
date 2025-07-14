@@ -5,22 +5,6 @@
   <title>Animação 2</title>
 	<meta charset="UTF-8">
 	<link rel="icon" href="resources/HTML5.png"/>
-	<script type="text/javascript" src="js/JSTools.js"></script>
-	<script charset="UTF-8" src="resources/languages/Animation 2.js"></script>
-	<script>
-	  function resizeCanvas() {
-	    if (canvas) {
-	      memCanvas.width = canvas.width;
-	      memCanvas.height = canvas.height;
-	      memD.drawImage(canvas, 0, 0);
-
-	      canvas.width = window.innerWidth;
-	      canvas.height = window.innerHeight;
-
-	      c.drawImage(memCanvas, 0, 0);
-	    }
-	  }
-	</script>
 	<style>
 	  body {
 	    margin: 0px;
@@ -52,44 +36,17 @@
 	  }
 	</style>
 </head>
-<body onresize="resizeCanvas();">
+<body>
   <canvas id="myCanvas" width="1366" height="638">O teu browser não suporta a tag canvas do HTML5.</canvas>
 	<div id="toolBar">
-	  <button id="backToIndex" onclick="backToIndex();">Voltar</button>
-	  <button id="reloadButton" onclick="location.reload(true)">Recarregar</button>
-	  <select id="dropdownLanguage" onchange="setLanguage(this.value)">
+	  <button id="backToIndex">Voltar</button>
+	  <button id="reloadButton">Recarregar</button>
+	  <select id="dropdownLanguage">
 	    <option value="pt">Português</option>
 	    <option value="en">English</option>
-	  </select><script>/*ONLOAD=*/var dropdownLanguage = element("dropdownLanguage");if(getCookie("language")!=undefined&&getCookie("language")!=""){dropdownLanguage.value=getCookie("language")}else{dropdownLanguage.value="pt"}</script>
+	  </select>
 	</div>
-	<script>
-	  
-	  var width = window.innerWidth;
-	  var height = window.innerHeight;
-	  var canvas = element("myCanvas");
-	  var c = canvas.getContext("2d");
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
-    
-	  var memCanvas = document.createElement("canvas");
-	  var memD = memCanvas.getContext("2d");
-
-	  window.requestAnimationFrame(loop);
-	  function loop() {
-	    width = window.innerWidth;
-	    height = window.innerHeight;
-	    drawRandomPixel(random(0, width, 1), random(0, height, 1));
-	    window.requestAnimationFrame(loop);
-	  }
-
-	  function drawRandomPixel(x, y) {
-	    c.beginPath();
-	    c.strokeStyle = getRandomColor();
-	    c.moveTo(x, y);
-	    c.lineTo(x + 1, y + 1);
-	    c.stroke();
-	  }
-	</script>
-	<script name="Define Language">setLanguage(getCookie("language"));</script>
-<!--</body>--></body>
+	<script type="module" src="src/Animation2/entrypoint.ts"></script>
+	<script name="Define Language"></script>
+</body>
 </html>

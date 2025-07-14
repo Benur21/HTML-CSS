@@ -1,6 +1,6 @@
-import { c as ctx, canvas } from "./Monopoly/Initialization";
 import './globals';
-
+let canvas: HTMLCanvasElement;
+let ctx: CanvasRenderingContext2D;
 /*--------------------------------------Function-1------------------------------------------------------------------*/
 function backToIndex(){ /*collapse(1,313)*/
   var currentURL = location.href;
@@ -21,6 +21,7 @@ function getRandomColor() {
 }
 /*--------------------------------------Function-4------------------------------------------------------------------*/
 function resizeCanvas(){
+  const canvas = (window as any).globals.canvas;
   //Get Window Ratio
   (window as any).globals.windowRatio = window.innerWidth / (window.innerHeight - (window as any).globals.toolBarHeight);
   //Get Canvas Ratio
@@ -141,6 +142,8 @@ Array.prototype.getControlByName = function (name: string) { //Ver se é mesmo n
 var functionSaved = false;
 var functionSave: () => void;
 function AnimationLOOP (funct: () => void) {
+  const canvas = (window as any).globals.canvas;
+  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
   if (!functionSaved) {
     functionSave = funct;
     functionSaved = true;
@@ -207,6 +210,8 @@ class Rectangle extends Control {
   }
   
   public draw() {
+    const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
+    
     if (this.visible) {
       ctx.fillStyle = this.color;
       ctx.strokeStyle = this.outlineColor;
@@ -221,6 +226,8 @@ class Rectangle extends Control {
   }
   
   drawParts_outline() {
+    const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
+    
     switch (this.outlinePosition.toLowerCase()) {
     case "inner":
       ctx.strokeRect(this.x + this.outlineWidth / 2, this.y + this.outlineWidth / 2, this.width - this.outlineWidth, this.height - this.outlineWidth);
@@ -235,6 +242,8 @@ class Rectangle extends Control {
   }
   
   drawParts_patterns() {
+    const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
+    
     switch (this.doPattern.toLowerCase()) {
     case "diagonals":
       ctx.beginPath();
@@ -291,6 +300,8 @@ class Circle extends Control {
   }
 
   draw() {
+    const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
+    
     if (this.visible) {
       ctx.beginPath();
       ctx.fillStyle = this.color;
@@ -325,6 +336,8 @@ class Label extends Control {
     this.yAlign = "middle"; //Vertical Aligning
   }
   updateContext () {
+    const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
+    
     if (this.visible) {
       ctx.fillStyle = this.color;
       ctx.textAlign = this.xAlign;
@@ -335,6 +348,8 @@ class Label extends Control {
     }
   }
   draw () {
+    const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
+    
     if (this.visible) {
       /*
       var something;
@@ -364,6 +379,8 @@ function Button(x: number, y: number, width: number, height: number, text: strin
 Button.prototype = Object.create(Rectangle.prototype);
 Button.prototype.constructor = Button;
 Button.prototype.draw = function () {
+  const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
+  
   if (this.visible) {
     //RECTANGLE DRAWING;
     //Configs:
@@ -406,6 +423,8 @@ Button.prototype.draw = function () {
   }
 }
 Button.prototype.onhover = function () {
+  const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
+  
   if (this.xAlign == "center") { //Para sincronizar o hovering com os align, e para verificar se há hovering.
     var hovering1 = mouseX > this.x - ctx.measureText(this.text).width / 2 - this.hoveringHeightIncrement;
     var hovering2 = mouseX < this.x + ctx.measureText(this.text).width / 2 + this.hoveringHeightIncrement;
