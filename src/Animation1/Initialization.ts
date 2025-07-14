@@ -1,0 +1,10 @@
+var canvas = element("canvas");
+var c = canvas.getContext("2d");
+var speedBox = element("speedBox");
+var randomPosition = element("randomPosition");
+var randomSpeed = element("randomSpeed");
+var ballsBox = element("ballsBox");
+ballsBox.value = 1;
+toolBarHeight = 27;
+element("toolBar").style.height = toolBarHeight + "px";
+canvas.style.top = toolBarHeight + "px";
