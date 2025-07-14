@@ -1,7 +1,8 @@
-﻿import { canvas } from "../Animation2/Main";
-import { element } from "../JSTools";
+﻿import { element } from "../JSTools";
 
 function setLanguage(language: "en" | "pt") {
+  const canvas = (window as any).globals.canvas;
+  
   switch (language) {
   case "en":
     document.cookie = "language=" + language + "; expires=Thu, 01 Jan 2040 00:00:00 UTC; path=/;";

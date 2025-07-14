@@ -22,6 +22,7 @@ const canvas = element("myCanvas") as HTMLCanvasElement;
 if (canvas == null) {
   throw new Error("Canvas is null.");
 }
+(window as any).globals.canvas = canvas;
 
 var c = canvas.getContext('2d') as CanvasRenderingContext2D;
 canvas.width = innerWidth;
