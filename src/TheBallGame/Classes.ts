@@ -606,7 +606,7 @@ class JSWindow extends Rectangle { /*collapseit*/
             contents[j].draw();
           } else if (contents[j]instanceof Label) {
             contents[j].updateLanguage();
-            contents[j].updateContext(); //TODO antes estava contents[i].updateContext(); verificar se funciona
+            contents[j].updateContext();
             contents[j].draw();
           } else if (contents[j]instanceof Ball) {
             contents[j].drawText();
