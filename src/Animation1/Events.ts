@@ -1,21 +1,28 @@
+import { distance } from "../JSTools";
+import { Ball } from "./Classes";
+import { ballsBox, randomPosition, randomSpeed, speedBox } from "./Initialization";
+import { balls, rect, setSpeed } from "./Main";
+
+let oldBalls;
+
 speedBox.oninput = function(){
   setSpeed(+speedBox.value);
 };
 randomPosition.onclick = function () {
-  for (i = 0; i < ball.length; i++) {
-    ball[i].goToRandomPos();
+  for (let i = 0; i < balls.length; i++) {
+    balls[i].goToRandomPos(rect);
     var ballisTouchingAnotherBall = false;
-    for (j = 0; j < ball.length; j++) {
+    for (let j = 0; j < balls.length; j++) {
       if (i !== j) {
         try {
-          var dist = distance(ball[j].x, ball[j].y, ball[i].x, ball[i].y);
-          if (dist < ball[j].radius + ball[i].radius + 10) {
+          var dist = distance(balls[j].x, balls[j].y, balls[i].x, balls[i].y);
+          if (dist < balls[j].radius + balls[i].radius + 10) {
             ballisTouchingAnotherBall=true;
           }
         } catch(err) {
-          console.log("ball[i]:"+ball[i]);
+          console.log("ball[i]:"+balls[i]);
           console.log("i:"+i);
-          console.log("ball.length:"+ball.length);
+          console.log("ball.length:"+balls.length);
           throw err + "MYERROR";
         }
       }
@@ -26,7 +33,7 @@ randomPosition.onclick = function () {
   }
 };
 randomSpeed.onclick = function () {
-  var rand = Math.random() * speedBox.max;
+  var rand = Math.random() * Number(speedBox.max);
   setSpeed(rand);
 };
 ballsBox.oninput = function () {
@@ -36,26 +43,26 @@ ballsBox.oninput = function () {
   if (parseInt(ballsBox.value) < parseInt(ballsBox.min) || ballsBox.value === "") {
     ballsBox.value = ballsBox.min;
   }
-  ballsBox.value = Math.floor(ballsBox.value);
+  ballsBox.value = String(Math.floor(Number(ballsBox.value)));
 
-  var maxSpeed = 1000 / ballsBox.value;
-  oldBalls = ball.length;
-  if (ballsBox.value < ball.length) {
-    for (m = 0; m < oldBalls - ballsBox.value; m++) {
-      ball.pop();
+  var maxSpeed = 1000 / Number(ballsBox.value);
+  oldBalls = balls.length;
+  if (Number(ballsBox.value) < balls.length) {
+    for (let m = 0; m < oldBalls - Number(ballsBox.value); m++) {
+      balls.pop();
     }
   } else {
-    numberOfBalls = ballsBox.value;
-    for (i = oldBalls; i < numberOfBalls; i++) {
-      ball[i] = new Ball(0, 0, i);
+    (window as any).globals.numberOfBalls = Number(ballsBox.value);
+    for (let i = oldBalls; i < (window as any).globals.numberOfBalls; i++) {
+      balls[i] = new Ball(0, 0, i);
     }
-    for (i = oldBalls; i < ball.length; i++) {
-      ball[i].goToRandomPos();
+    for (let i = oldBalls; i < balls.length; i++) {
+      balls[i].goToRandomPos(rect);
       var balliTouchingAnotherBall = false;
-      for (j = 0; j < ball.length; j++) {
+      for (let j = 0; j < balls.length; j++) {
         if (i !== j) {
-          var dist = distance(ball[j].x, ball[j].y, ball[i].x, ball[i].y);
-          if (dist < ball[j].radius + ball[i].radius + 10) {
+          var dist = distance(balls[j].x, balls[j].y, balls[i].x, balls[i].y);
+          if (dist < balls[j].radius + balls[i].radius + 10) {
             balliTouchingAnotherBall=true;
           }
         }
@@ -65,10 +72,10 @@ ballsBox.oninput = function () {
       }
     }
   }
-  setSpeed(ball[0].speed);
+  setSpeed(balls[0].speed);
 
-  speedBox.max = maxSpeed;
-  if (speedBox.value > maxSpeed) {
+  speedBox.max = String(maxSpeed);
+  if (Number(speedBox.value) > maxSpeed) {
     setSpeed(maxSpeed);
   }
 };

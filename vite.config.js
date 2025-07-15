@@ -11,6 +11,7 @@ export default defineConfig({
         index: resolve(__dirname, 'index.html'),
         monopoly: resolve(__dirname, 'Monopoly.html'),
         theballgame: resolve(__dirname, 'TheBallGame.html'),
+        animation1: resolve(__dirname, 'Animation1.html'),
         animation2: resolve(__dirname, 'Animation2.html'),
       },
     },

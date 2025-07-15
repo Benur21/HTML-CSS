@@ -1,6 +1,6 @@
 // import '../globals';
 // import '../JSTools';
 // import './Initialization';
-// import './Events';
+import './Events';
 // import './Classes';
 import './Main';
