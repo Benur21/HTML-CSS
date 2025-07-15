@@ -2,28 +2,29 @@
 <?php include("php/track_code.php");?>
 <html>
 <head>
-  <title>Monopoly</title>
+  <title>Animação 1</title>
   <meta charset="UTF-8">
-  <link rel="icon" href="resources/HTML5.png" />
+	<link rel="icon" href="resources/HTML5.png"/>
 	<style>
- 	  body {
+	  body {
 	    margin: 0px;
 		  width: 100%;
 		  height: 100%;
+		  background-color: red;
 	  }
-    #canvas {
-      margin: 0px;
+	  #canvas {
+	    margin: 0px;
 		  position: fixed; 
 		  top: 0px; 
 		  left: 0px; 
 		  padding: 0px;
 		  border: 0px solid black;
-    }
+	  }
 	  #toolBar {
 	    background-color: black;
 		  position: fixed;
-		  top: 0px;
-		  left: 0px;
+		  top: 0;
+		  left: 0;
 		  padding: 0px;
 		  width: 100%;
 		  height: 27px;
@@ -39,22 +40,28 @@
 		  font-family: Arial Black;
 		  font-size: 13px;
 	  }
-  </style>
-  <script type="module" crossorigin src="./assets/monopoly-D15LrfS3.js"></script>
+	  #speedBox {
+	    width: 50px;
+	  }
+	</style>
+  <script type="module" crossorigin src="./assets/animation1-CjGeK7Rr.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/JSTools-DJ8q3-ns.js">
 </head>
 <body>
-  <canvas id="canvas" width="1000" height="1000">O teu browser não suporta a tag canvas do HTML5.</canvas>
-  <div id="toolBar">
+  <canvas id="canvas" width="1366" height="638">O teu browser não suporta a tag canvas do HTML5.</canvas>
+	<div id="toolBar">
 	  <button id="backToIndex">Voltar</button>
 	  <button id="reloadButton">Recarregar</button>
+	  <span id="speed">Velocidade: </span>
+	  <input type="number" id="speedBox" class="labeledInput" min="0" max="1000" title="Velocidade da(s) bola(s)."/>
+	  <button id="randomPosition">Aleatorizar Posição</button>
+	  <button id="randomSpeed">Aleatorizar Velocidade</button>
+	  <span id="balls">Bolas: </span>
+	  <input type="number" id="ballsBox" class="labeledInput" min="1" max="100" title="Número de bolas na animação." />
 	  <select id="dropdownLanguage">
 	    <option value="pt">Português</option>
 	    <option value="en">English</option>
-	  </select>
+		</select>
 	</div>
-  <!-- <script name="Initialization" type="text/javascript" src="src/Monopoly_Initialization.js"></script>
-  <script name="Classes" type="text/javascript" src="src/Monopoly_Classes.js"></script>
-  <script name="Real Code" type="text/javascript" src="src/Monopoly_Main.js"></script> -->
 </body>
 </html>
