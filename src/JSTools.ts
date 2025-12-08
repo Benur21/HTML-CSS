@@ -148,7 +148,7 @@ function AnimationLOOP (funct: () => void) {
     functionSave = funct;
     functionSaved = true;
   }
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.setTransform(1, 0, 0, 1, 0, 0); // reset transforms
   ctx.clearRect(0,0,canvas.width,canvas.height);
   functionSave();
   requestAnimationFrame(AnimationLOOP as any);
@@ -197,7 +197,6 @@ class Rectangle extends Control {
   width: number;
   height: number;
   outlinePosition: string;
-  doTranslate: boolean;
   doPattern: string;
   constructor (x: number, y: number, width: number, height: number) {
     super(x, y);
@@ -205,7 +204,6 @@ class Rectangle extends Control {
     this.height = height;
     this.outlineWidth = 4;
     this.outlinePosition = "center";
-    this.doTranslate = false;
     this.doPattern = "";
   }
   
@@ -219,9 +217,6 @@ class Rectangle extends Control {
       ctx.fillRect(this.x, this.y, this.width, this.height);
       this.drawParts_outline();
       this.drawParts_patterns();
-      if (this.doTranslate) {
-        ctx.translate(this.x, this.y);
-      }
     }
   }
   
@@ -459,9 +454,6 @@ export {
   backToIndex,
   element,
   getRandomColor,
-  windowRatio,
-  canvasRatio,
-  canvasScale,
   resizeCanvas,
   toRadian,
   toDegree,

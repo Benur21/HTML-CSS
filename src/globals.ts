@@ -2,6 +2,6 @@
   windowRatio: undefined,
   canvasRatio: undefined,
   toolBarHeight: 27,
-  canvasScale: undefined,
+  canvasScale: undefined as number | undefined,
 }
 

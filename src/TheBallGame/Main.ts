@@ -1,7 +1,7 @@
 import "../languages/TheBallGame";
 import { AnimationLOOP, download, Label, Rectangle } from "../JSTools";
 import { setKeyStates } from "./Events";
-import { Ball, GameState, TextButton } from "./Classes";
+import { Ball, GameState, JSWindow, TextButton } from "./Classes";
 
 const c = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
 
@@ -67,7 +67,8 @@ var debugFrameRate: number;
 var debugTimer: number;
 
 // (window as any).globals.w = new JSWindow(700, 500);
-// (window as any).globals.w.container.closeButton = new TextButton(0, 0, "X", "center", 20, 5);
+// (window as any).globals.w.container.closeButton = new TextButton(350, 250, "X", "center", 20, 5);
+// (window as any).globals.w.container.closeButton.updateLanguage = function(){this.text="X"};
 // (window as any).globals.w.visible = true;
 // (window as any).globals.w.show();
 

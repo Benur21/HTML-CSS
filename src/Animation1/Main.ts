@@ -6,9 +6,9 @@ import { ballsBox, speedBox } from "./Initialization";
 var rect = new Rectangle(50,50,840,483);
 rect.outlineWidth = 2;
 rect.outlinePosition = "center";
-rect.doTranslate = true;
 
 const canvas = (window as any).globals.canvas as HTMLCanvasElement;
+const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
 
 canvas.width = rect.x * 2 + rect.width;
 canvas.height = rect.y * 2 + rect.height;
@@ -26,6 +26,7 @@ setSpeed(balls[0].speed);
 resizeCanvas();
 AnimationLOOP(function(){
   rect.draw();
+  ctx.translate(rect.x, rect.y);
   for (let i = 0; i < balls.length; i++) {
     balls[i].draw();
     balls[i].updatePos(balls, rect);

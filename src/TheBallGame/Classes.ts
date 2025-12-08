@@ -28,17 +28,32 @@ class TextButton extends Label {
   }
   
   onhover() { /*collapseit*/
+    // Map global mouse coords into the current canvas transform's local space so
+    // hit-testing matches where the control is actually drawn (considering translate). (Copilot code)
+    let localMouseX = mouseX;
+    let localMouseY = mouseY;
+    try {
+      const inv = c.getTransform();
+      inv.invertSelf(); // invertSelf is supported in modern browsers
+      const p = new DOMPoint(mouseX, mouseY).matrixTransform(inv);
+      localMouseX = p.x;
+      localMouseY = p.y;
+    } catch (e) {
+      console.warn("Could not invert canvas transform for mouse hit-testing.", e);
+      // fallback to global mouse coords if transform inversion fails
+    }
+    // (Copilot code end)
     let hovering1, hovering2, hovering3, hovering4;
     if (this.xAlign == "center") { //Para sincronizar o hovering com os align, e para verificar se há hovering.
-      hovering1 = mouseX > this.x - c.measureText(this.text).width / 2 - this.hoveringHeightIncrement;
-      hovering2 = mouseX < this.x + c.measureText(this.text).width / 2 + this.hoveringHeightIncrement;
-      hovering3 = mouseY > this.y - this.textHeight / 2 - this.hoveringHeightIncrement;
-      hovering4 = mouseY < this.y + this.textHeight / 2 + this.hoveringHeightIncrement;
+      hovering1 = localMouseX > this.x - c.measureText(this.text).width / 2 - this.hoveringHeightIncrement;
+      hovering2 = localMouseX < this.x + c.measureText(this.text).width / 2 + this.hoveringHeightIncrement;
+      hovering3 = localMouseY > this.y - this.textHeight / 2 - this.hoveringHeightIncrement;
+      hovering4 = localMouseY < this.y + this.textHeight / 2 + this.hoveringHeightIncrement;
     } else if (this.xAlign == "start") {
-      hovering1 = mouseX > this.x - this.hoveringHeightIncrement;
-      hovering2 = mouseX < this.x + c.measureText(this.text).width + this.hoveringHeightIncrement;
-      hovering3 = mouseY > this.y - this.textHeight / 2 - this.hoveringHeightIncrement;
-      hovering4 = mouseY < this.y + this.textHeight / 2 + this.hoveringHeightIncrement;
+      hovering1 = localMouseX > this.x - this.hoveringHeightIncrement;
+      hovering2 = localMouseX < this.x + c.measureText(this.text).width + this.hoveringHeightIncrement;
+      hovering3 = localMouseY > this.y - this.textHeight / 2 - this.hoveringHeightIncrement;
+      hovering4 = localMouseY < this.y + this.textHeight / 2 + this.hoveringHeightIncrement;
     } else {
       console.error("Invalid xAlign value on TextButton.");
     }
@@ -469,8 +484,15 @@ class GameState extends Rectangle { /*collapseit*/
     this.outlinePosition = "outer";
     this.color = "#2f538e";
     this.visible = false;
-    this.doTranslate = true;
-    this.container = new Object();
+    this.container = new Proxy({}, {
+      set: (target: any, prop: string | symbol, value: any) => {
+        target[prop as any] = value;
+        if (value && typeof value === "object" && "parent" in value) {
+          try { value.parent = this; } catch (e) { /* ignore readonly */ }
+        }
+        return true;
+      }
+    });
   }
   // getAllProperties() {
   //   var properties = [];
@@ -482,21 +504,10 @@ class GameState extends Rectangle { /*collapseit*/
   //   return properties;
   // };
   draw() { /*collapseit*/
-    c.setTransform(1, 0, 0, 1, 0, 0);
-    if (this.visible) { //Draw itself
-      c.lineWidth = this.outlineWidth;
-      c.fillStyle = this.color;
-      c.strokeStyle = this.outlineColor;
-      c.lineWidth = this.outlineWidth;
-      c.fillRect(this.x, this.y, this.width, this.height);
-      this.drawParts_outline();
-      this.drawParts_patterns();
-    }
-    if (this.doTranslate) {
-      c.translate(this.x, this.y);
-    }
+    c.setTransform(1, 0, 0, 1, 0, 0); // reset transforms
+    super.draw();
     if (this.visible) {
-      var contents = this.container.getAllProperties();
+      var contents = this.container.getAllProperties() as Array<any>;
       
       //Order controls by showIndex
       var indices = [];
@@ -507,25 +518,30 @@ class GameState extends Rectangle { /*collapseit*/
           controls.push(contents[i]);
         }
       }
-      controls.sort(function(a,b){return a.showIndex-b.showIndex}); //Lower is drawn first, in back.
+      controls.sort((a, b) => a.showIndex - b.showIndex); //Lower is drawn first, in back.
       for (let i = 0; i < controls.length; i++) {
         contents[indices[i]] = controls[i];
       }
+      
+      // Draw contents relative to GameState position
+      c.save();
+      c.translate(this.x, this.y);
+      
       //Draw everything in its container
       for (let i = 0; i < contents.length; i++) { //Lembrar que também há um destes na JSWindow.
         switch (typeof(contents[i])) {
         case "object":
-          if (contents[i]instanceof TextButton) {
+          if (contents[i] instanceof TextButton) {
             contents[i].update();
             contents[i].draw();
-          } else if (contents[i]instanceof Label) {
+          } else if (contents[i] instanceof Label) {
             contents[i].updateLanguage();
             contents[i].updateContext();
             contents[i].draw();
-          } else if (contents[i]instanceof JSWindow) {
+          } else if (contents[i] instanceof JSWindow) {
             contents[i].draw();
             contents[i].updatePos();
-          } else if (contents[i]instanceof Ball) {
+          } else if (contents[i] instanceof Ball) {
             contents[i].drawText();
             contents[i].checkPos();
             contents[i].draw();
@@ -542,6 +558,7 @@ class GameState extends Rectangle { /*collapseit*/
           break;
         }
       }
+      c.restore();
     }
   };
 }
@@ -556,10 +573,12 @@ class JSWindow extends Rectangle { /*collapseit*/
   maxYMoveSpeed: number;
   showing: boolean;
   hiding: boolean;
-  container: {};
+  container: { [key: string]: any };
+  parent: JSWindow | GameState | null;
   constructor(width: number, height: number) {
+    // By default the JSWindow is centered in the canvas. If a parent is
+    // supplied we'll initialize relative to the parent's coordinates.
     super(canvas.width/2 - width/2, -height, width, height);
-    this.doTranslate = true;
     this.color = "#1062e8";
     this.outlinePosition = "inner";
     this.showIndex = 100;
@@ -567,21 +586,10 @@ class JSWindow extends Rectangle { /*collapseit*/
     this.showing = false;
     this.hiding = false;
     this.container = new Object();
+    this.parent = null;
   }
   draw() { /*collapseit*/
-    c.setTransform(1, 0, 0, 1, 0, 0);
-    if (this.visible) { //Draw itself
-      c.lineWidth = this.outlineWidth;
-      c.fillStyle = this.color;
-      c.strokeStyle = this.outlineColor;
-      c.lineWidth = this.outlineWidth;
-      c.fillRect(this.x, this.y, this.width, this.height);
-      this.drawParts_outline();
-      this.drawParts_patterns();
-    }
-    if (this.doTranslate) {
-      c.translate(this.x, this.y);
-    }
+    super.draw();
     if (this.visible) {
       var contents = this.container.getAllProperties();
       //Order controls by showIndex
@@ -597,18 +605,23 @@ class JSWindow extends Rectangle { /*collapseit*/
       for (let j = 0; j < controls.length; j++) {
         contents[indices[j]] = controls[j];
       }
+      
+      // Draw contents relative to JSWindow position
+      c.save();
+      c.translate(this.x, this.y);
+      
       //Draw everything in its container
       for (let j = 0; j < contents.length; j++) { //Lembrar que também há um destes na GameState.
         switch (typeof(contents[j])) {
         case "object":
-          if (contents[j]instanceof TextButton) {
+          if (contents[j] instanceof TextButton) {
             contents[j].update();
             contents[j].draw();
-          } else if (contents[j]instanceof Label) {
+          } else if (contents[j] instanceof Label) {
             contents[j].updateLanguage();
             contents[j].updateContext();
             contents[j].draw();
-          } else if (contents[j]instanceof Ball) {
+          } else if (contents[j] instanceof Ball) {
             contents[j].drawText();
             contents[j].checkPos();
             contents[j].draw();
@@ -625,26 +638,30 @@ class JSWindow extends Rectangle { /*collapseit*/
           break;
         }
       }
-      
+      c.restore();
     }
-    c.setTransform(1, 0, 0, 1, 0, 0);
-    c.translate(game.x, game.y); //considering that there is a game GameState
   };
   
   updatePos() { /*collapseit*/
-    var showProgress = distance(0, this.y, 0, canvas.height / 2 - this.height / 2) /*Current*/ /
-                        distance(0, -this.height, 0, canvas.height / 2 - this.height / 2) /*Total*/;
-    var hideProgress = distance(0, this.y, 0, canvas.height) /*Current*/ /
-                        distance(0, canvas.height / 2 - this.height / 2, 0, canvas.height) /*Total*/;
+    // Compute show/hide targets relative to parent if present, otherwise use canvas
+    const targetShowY = this.parent ? (-this.parent.y + canvas.height / 2 - this.height / 2) : (canvas.height / 2 - this.height / 2);
+    const startShowY = this.parent ? (-this.parent.y - this.height) : -this.height;
+    const targetHideY = this.parent ? (-this.parent.y + canvas.height) : canvas.height;
+
+    const showProgress = distance(0, this.y, 0, targetShowY) /*Current*/ /
+                         distance(0, startShowY, 0, targetShowY) /*Total*/;
+    const hideProgress = distance(0, this.y, 0, targetHideY) /*Current*/ /
+                         distance(0, targetShowY, 0, targetHideY) /*Total*/;
+
     if (this.showing) {
-      this.y += this.maxYMoveSpeed*showProgress;
-      if (Math.round(this.y) == Math.round(canvas.height / 2 - this.height / 2)) {
+      this.y += this.maxYMoveSpeed * showProgress;
+      if (Math.round(this.y) === Math.round(targetShowY)) {
         this.showing = false;
       }
     }
     if (this.hiding) {
-      this.y += this.maxYMoveSpeed*(1-hideProgress)+1;
-      if (this.y > canvas.height) {
+      this.y += this.maxYMoveSpeed * (1 - hideProgress) + 1;
+      if (this.y > targetHideY) {
         this.hiding = false;
       }
     }
@@ -652,16 +669,16 @@ class JSWindow extends Rectangle { /*collapseit*/
   
   show() { /*collapseit*/
     this.visible = true;
-    this.x = canvas.width/2 - this.width/2;
-    this.y = -this.height;
+    this.x = this.parent ? (-this.parent.x + canvas.width / 2 - this.width / 2) : (canvas.width / 2 - this.width / 2);
+    this.y = this.parent ? (-this.parent.y - this.height) : -this.height;
     this.showing = true;
     this.hiding = false;
   };
   
   hide() { /*collapseit*/
     this.visible = true;
-    this.x = canvas.width/2 - this.width/2;
-    this.y = canvas.height/2 - this.height/2;
+    this.x = this.parent ? (-this.parent.x + canvas.width / 2 - this.width / 2) : (canvas.width / 2 - this.width / 2);
+    this.y = this.parent ? (-this.parent.y + canvas.height / 2 - this.height / 2) : (canvas.height / 2 - this.height / 2);
     this.showing = false;
     this.hiding = true;
   };

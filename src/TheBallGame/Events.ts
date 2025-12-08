@@ -2,7 +2,7 @@ import { resizeCanvas } from "../JSTools";
 import { background } from "./Initialization";
 import { game } from "./Main";
 
-const canvas = (window as any).globals.canvas;
+const canvas = (window as any).globals.canvas as HTMLCanvasElement;
 
 var lastKey;
 var upIsDown = false;
@@ -41,16 +41,14 @@ document.body.onkeyup = function (event) {
 };
 var mouseX: number, mouseY: number, mouseIsDown: boolean;
 document.body.onmousemove = function (event) {
-  mouseX =
-    (event.clientX -
-      Number(canvas.style.left.replace('px', '')) -
-      game.x * (window as any).globals.canvasScale) /
-    (window as any).globals.canvasScale;
-  mouseY =
-    (event.clientY -
-      Number(canvas.style.top.replace('px', '')) -
-      game.y * (window as any).globals.canvasScale) /
-    (window as any).globals.canvasScale;
+  // Compute mouse coordinates in canvas drawing coordinate space.
+  // Use getBoundingClientRect to account for page layout and CSS scaling.
+  const rect = canvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  // Scale from CSS pixels to canvas pixels (handles HiDPI and CSS sizing).
+  mouseX = x * (canvas.width / rect.width);
+  mouseY = y * (canvas.height / rect.height);
 };
 document.body.onmousedown = function () {
   mouseIsDown = true;
