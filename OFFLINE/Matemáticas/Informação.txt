@@ -1,1 +1,0 @@
-.ggb é um ficheiro do GeoGebra. Dá para abri-los online sem ter que instalar o programa.
