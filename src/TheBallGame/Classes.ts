@@ -28,6 +28,10 @@ class TextButton extends Label {
   }
   
   onhover() { /*collapseit*/
+    if (!this.isFocused()) {
+      return;
+    }
+    
     // Map global mouse coords into the current canvas transform's local space so
     // hit-testing matches where the control is actually drawn (considering translate). (Copilot code)
     let localMouseX = mouseX;
@@ -77,6 +81,10 @@ class TextButton extends Label {
   };
   
   onClickEvent () { /*collapseit*/
+    if (!this.isFocused()) {
+      return;
+    }
+    
     if (this.internal_hovered) {
       if (mouseIsDown) { //Se isto for verdade, ou seja está-se clicando em cima do botão, só falta largar para a...
         this.internal_waitingForRelease = true; //...condição seguinte ser executada.
@@ -98,6 +106,26 @@ class TextButton extends Label {
     this.onClickEvent();
     this.updateLanguage();
   };
+  
+  isFocused(): boolean {
+    // To prevent clicks and hover effects when it's not on the top window or
+    // on a GameState when there's no window open
+    if (this.parent instanceof JSWindow) {
+      return this.parent.isTopWindow();
+    } else if (this.parent instanceof GameState) {
+      // Check if an window is open
+      const jsWindows = JSWindow.getAllInstances() as Array<JSWindow>;
+      for (let i = 0; i < jsWindows.length; i++) {
+        if (jsWindows[i].visible) {
+          // If it's on a GameState and there's a window open, it's not focused
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return true;
+    }
+  }
 }
 
 class PlayerInfo extends Label {/*collapseit*/
@@ -574,19 +602,27 @@ class JSWindow extends Rectangle { /*collapseit*/
   showing: boolean;
   hiding: boolean;
   container: { [key: string]: any };
-  parent: JSWindow | GameState | null;
+  parent?: JSWindow | GameState;
   constructor(width: number, height: number) {
     // By default the JSWindow is centered in the canvas. If a parent is
     // supplied we'll initialize relative to the parent's coordinates.
     super(canvas.width/2 - width/2, -height, width, height);
     this.color = "#1062e8";
     this.outlinePosition = "inner";
-    this.showIndex = 100;
     this.maxYMoveSpeed = 40;
     this.showing = false;
     this.hiding = false;
-    this.container = new Object();
-    this.parent = null;
+    this.container = new Proxy({}, {
+      // Add parent to any object added to the container
+      set: (target: any, prop: string | symbol, value: any) => {
+        target[prop as any] = value;
+        if (value && typeof value === "object" && "parent" in value) {
+          try { value.parent = this; } catch (e) { /* ignore readonly */ }
+        }
+        return true;
+      }
+    });
+    this.parent = undefined;
   }
   draw() { /*collapseit*/
     super.draw();
@@ -654,6 +690,7 @@ class JSWindow extends Rectangle { /*collapseit*/
                          distance(0, targetShowY, 0, targetHideY) /*Total*/;
 
     if (this.showing) {
+      this.visible = true;
       this.y += this.maxYMoveSpeed * showProgress;
       if (Math.round(this.y) === Math.round(targetShowY)) {
         this.showing = false;
@@ -663,12 +700,13 @@ class JSWindow extends Rectangle { /*collapseit*/
       this.y += this.maxYMoveSpeed * (1 - hideProgress) + 1;
       if (this.y > targetHideY) {
         this.hiding = false;
+        this.visible = false;
       }
     }
   };
   
   show() { /*collapseit*/
-    this.visible = true;
+    // Starting position
     this.x = this.parent ? (-this.parent.x + canvas.width / 2 - this.width / 2) : (canvas.width / 2 - this.width / 2);
     this.y = this.parent ? (-this.parent.y - this.height) : -this.height;
     this.showing = true;
@@ -676,12 +714,27 @@ class JSWindow extends Rectangle { /*collapseit*/
   };
   
   hide() { /*collapseit*/
-    this.visible = true;
+    // Starting position
     this.x = this.parent ? (-this.parent.x + canvas.width / 2 - this.width / 2) : (canvas.width / 2 - this.width / 2);
     this.y = this.parent ? (-this.parent.y + canvas.height / 2 - this.height / 2) : (canvas.height / 2 - this.height / 2);
     this.showing = false;
     this.hiding = true;
   };
+  /**
+   * @returns Returns true if this window is the topmost visible window.
+   */
+  isTopWindow(): boolean {
+    const jsWindows = JSWindow.getAllInstances() as Array<JSWindow>;
+    let topWindow: JSWindow | null = null;
+    let topShowIndex = -Infinity;
+    for (let i = 0; i < jsWindows.length; i++) {
+      if (jsWindows[i].visible && jsWindows[i].showIndex > topShowIndex) {
+        topShowIndex = jsWindows[i].showIndex;
+        topWindow = jsWindows[i];
+      }
+    }
+    return topWindow === this;
+  }
 }
 
 export { TextButton, PlayerInfo, Ball, GameState, JSWindow };

@@ -5,7 +5,7 @@ import { AnimationLOOP, Control, Rectangle } from '../JSTools';
 const canvas = (window as any).globals.canvas;
 
 var gameBoard = new Rectangle(canvasPadding, canvasPadding, canvas.width-canvasPadding*2, canvas.height-canvasPadding*2);
-gameBoard.doTranslate = true; //Space 980x980
+//Space 980x980
 gameBoard.color = "#B0B3B7";
 gameBoard.outlinePosition = "outer";
 gameBoard.showIndex = 1;

@@ -1,7 +1,7 @@
 import "../languages/TheBallGame";
 import { AnimationLOOP, download, Label, Rectangle } from "../JSTools";
 import { setKeyStates } from "./Events";
-import { Ball, GameState, TextButton } from "./Classes";
+import { Ball, GameState, JSWindow, TextButton } from "./Classes";
 
 const c = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
 
@@ -66,16 +66,18 @@ var debugTax = 6;
 var debugFrameRate: number;
 var debugTimer: number;
 
-// (window as any).globals.w = new JSWindow(700, 500);
-// (window as any).globals.w.container.closeButton = new TextButton(680, 20, "X", "center", 20, 5);
-// (window as any).globals.w.container.closeButton.updateLanguage = function(){this.text="X"};
-// (window as any).globals.w.container.closeButton.onclick = () => {
-//   (window as any).globals.w.hide();
-// }
-// (window as any).globals.w.container.welcomemsg = new Label(350, 250, "Welcome! 😀", "center");
-// (window as any).globals.w.container.welcomemsg.updateLanguage = function(){this.text="Welcome! 😀"};
-// (window as any).globals.w.visible = true;
-// (window as any).globals.w.show();
+mainMenu.container.w = new JSWindow(700, 500);
+mainMenu.container.w.container.closeButton = new TextButton(680, 20, "X", "center", 20, 5);
+mainMenu.container.w.container.closeButton.updateLanguage = function(){this.text="X"};
+mainMenu.container.w.container.closeButton.onclick = () => {
+  mainMenu.container.w.hide();
+}
+mainMenu.container.w.container.welcomemsg = new Label(350, 250, "Welcome! 😀", "center");
+mainMenu.container.w.container.welcomemsg.updateLanguage = function(){this.text="Welcome! 😀"};
+mainMenu.container.w.visible = true;
+mainMenu.container.w.show();
+
+(window as any).globals.mainMenu = mainMenu;
 
 //var gameState = "mainMenu"; /*	'mainMenu'	'game'	'options'	*/
 /*------------------------------------LOOP-----------------------------------------*/  
@@ -84,8 +86,6 @@ AnimationLOOP(function(){
   game.draw();
   mainMenu.draw();
   options.draw();
-  // (window as any).globals.w.draw();
-  // (window as any).globals.w.updatePos();
   /*switch (gameState) {
   case 'game':
     lava.draw();
