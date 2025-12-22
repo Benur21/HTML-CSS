@@ -122,6 +122,8 @@ class TextButton extends Label {
         }
       }
       return true;
+    } else {
+      return true;
     }
   }
 }
