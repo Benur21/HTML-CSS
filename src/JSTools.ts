@@ -165,6 +165,7 @@ class Control {
   outlineWidth: number;
   visible: boolean;
   showIndex: number;
+  parent?: Control;
   constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
