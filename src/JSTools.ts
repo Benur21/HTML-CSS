@@ -364,96 +364,97 @@ class Label extends Control {
   };
 }
 /*--------------------------------------Function-20-----------------------------------------------------------------*/
-function Button(x: number, y: number, width: number, height: number, text: string) {
-  Rectangle.call(this, x, y, 50, 81); 
-  this.label = new Label(x, y, text, 'center');
-  this.label.outlineWidth = 6;
-  this.label.outlineColor = "black";
-  this.autoResize = "true";
-  this.color = "#3e7fe8";
-}
-Button.prototype = Object.create(Rectangle.prototype);
-Button.prototype.constructor = Button;
-Button.prototype.draw = function () {
-  const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
+// function Button(x: number, y: number, width: number, height: number, text: string) {
+//   Rectangle.call(this, x, y, 50, 81); 
+//   this.label = new Label(x, y, text, 'center');
+//   this.label.outlineWidth = 6;
+//   this.label.outlineColor = "black";
+//   this.autoResize = "true";
+//   this.color = "#3e7fe8";
+// }
+// Button.prototype = Object.create(Rectangle.prototype);
+// Button.prototype.constructor = Button;
+// Button.prototype.draw = function () {
+//   const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
   
-  if (this.visible) {
-    //RECTANGLE DRAWING;
-    //Configs:
-    ctx.fillStyle = this.color;
-    ctx.lineWidth = this.outlineWidth;
-    ctx.strokeStyle = this.outlineColor;
-    //AutoResize:
-    var textWidth = ctx.measureText(this.label.text).width;
-    var textHeight = this.label.textHeight;
-    if (this.autoResize) {
-      if (this.width < textWidth) {
-        this.width = textWidth;
-      }
-      if (this.height < textHeight) {
-        this.height = textHeight + 20;
-      }
-    }
-    //Updating init coordinates:
-    this.initX = this.x;
-    this.initY = this.y;
-    //Centering Button:
-    this.x = this.initX-this.width/2;
-    this.y = this.initY-this.height/2;
-    //Filling Rectangle:
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-    //Stroke Drawing:
-    this.drawParts_outline();
-    //Recovering coordinates:
-    this.x = this.initX;
-    this.y = this.initY;
-    //Rectangle Done.
+//   if (this.visible) {
+//     //RECTANGLE DRAWING;
+//     //Configs:
+//     ctx.fillStyle = this.color;
+//     ctx.lineWidth = this.outlineWidth;
+//     ctx.strokeStyle = this.outlineColor;
+//     //AutoResize:
+//     var textWidth = ctx.measureText(this.label.text).width;
+//     var textHeight = this.label.textHeight;
+//     if (this.autoResize) {
+//       if (this.width < textWidth) {
+//         this.width = textWidth;
+//       }
+//       if (this.height < textHeight) {
+//         this.height = textHeight + 20;
+//       }
+//     }
+//     //Updating init coordinates:
+//     this.initX = this.x;
+//     this.initY = this.y;
+//     //Centering Button:
+//     this.x = this.initX-this.width/2;
+//     this.y = this.initY-this.height/2;
+//     //Filling Rectangle:
+//     ctx.fillRect(this.x, this.y, this.width, this.height);
+//     //Stroke Drawing:
+//     this.drawParts_outline();
+//     //Recovering coordinates:
+//     this.x = this.initX;
+//     this.y = this.initY;
+//     //Rectangle Done.
     
-    //TEXT DRAWING;
-    //Updating label coordinates to be the same as the button ones:
-    this.label.x = this.x;
-    this.label.y = this.y;
-    //Drawing Text:
-    this.label.draw();
-    //Label Done.
-  }
-}
-Button.prototype.onhover = function () {
-  const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
+//     //TEXT DRAWING;
+//     //Updating label coordinates to be the same as the button ones:
+//     this.label.x = this.x;
+//     this.label.y = this.y;
+//     //Drawing Text:
+//     this.label.draw();
+//     //Label Done.
+//   }
+// }
+// Button.prototype.onhover = function () {
+//   const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
   
-  if (this.xAlign == "center") { //Para sincronizar o hovering com os align, e para verificar se há hovering.
-    var hovering1 = mouseX > this.x - ctx.measureText(this.text).width / 2 - this.hoveringHeightIncrement;
-    var hovering2 = mouseX < this.x + ctx.measureText(this.text).width / 2 + this.hoveringHeightIncrement;
-    var hovering3 = mouseY > this.y - this.textHeight / 2 - this.hoveringHeightIncrement;
-    var hovering4 = mouseY < this.y + this.textHeight / 2 + this.hoveringHeightIncrement;
-  } else if (this.xAlign == "start") {
-    var hovering1 = mouseX > this.x - this.hoveringHeightIncrement;
-    var hovering2 = mouseX < this.x + ctx.measureText(this.text).width + this.hoveringHeightIncrement;
-    var hovering3 = mouseY > this.y - this.textHeight / 2 - this.hoveringHeightIncrement;
-    var hovering4 = mouseY < this.y + this.textHeight / 2 + this.hoveringHeightIncrement;
-  }
-  this.internal_hovered = hovering1 && hovering2 && hovering3 && hovering4;
-  if (this.internal_hovered) {
-    if (!this.internal_mouseEnter) {
-      this.internal_mouseEnter = true;
-      this.textHeight += this.hoveringHeightIncrement;
-    }
-    this.internal_mouseLeave = false;
-    this.outlineColor = "black";
-  } else {
-    if (!this.internal_mouseLeave) {
-      this.internal_mouseLeave = true;
-      this.textHeight -= this.hoveringHeightIncrement;
-    }
-    this.internal_mouseEnter = false;
-    this.internal_waitingForRelease = false;
-    this.outlineColor = transparent;
-  }
-};
+//   if (this.xAlign == "center") { //Para sincronizar o hovering com os align, e para verificar se há hovering.
+//     var hovering1 = mouseX > this.x - ctx.measureText(this.text).width / 2 - this.hoveringHeightIncrement;
+//     var hovering2 = mouseX < this.x + ctx.measureText(this.text).width / 2 + this.hoveringHeightIncrement;
+//     var hovering3 = mouseY > this.y - this.textHeight / 2 - this.hoveringHeightIncrement;
+//     var hovering4 = mouseY < this.y + this.textHeight / 2 + this.hoveringHeightIncrement;
+//   } else if (this.xAlign == "start") {
+//     var hovering1 = mouseX > this.x - this.hoveringHeightIncrement;
+//     var hovering2 = mouseX < this.x + ctx.measureText(this.text).width + this.hoveringHeightIncrement;
+//     var hovering3 = mouseY > this.y - this.textHeight / 2 - this.hoveringHeightIncrement;
+//     var hovering4 = mouseY < this.y + this.textHeight / 2 + this.hoveringHeightIncrement;
+//   }
+//   this.internal_hovered = hovering1 && hovering2 && hovering3 && hovering4;
+//   if (this.internal_hovered) {
+//     if (!this.internal_mouseEnter) {
+//       this.internal_mouseEnter = true;
+//       this.textHeight += this.hoveringHeightIncrement;
+//     }
+//     this.internal_mouseLeave = false;
+//     this.outlineColor = "black";
+//   } else {
+//     if (!this.internal_mouseLeave) {
+//       this.internal_mouseLeave = true;
+//       this.textHeight -= this.hoveringHeightIncrement;
+//     }
+//     this.internal_mouseEnter = false;
+//     this.internal_waitingForRelease = false;
+//     this.outlineColor = transparent;
+//   }
+// };
 /*--------------------------------------Function-21-----------------------------------------------------------------*/
 class GameState extends Rectangle { /*collapseit*/
   container: { [key: string]: any };
   constructor() {
+    const canvas = (window as any).globals.canvas;
     super(canvas.width / 2 - 500, canvas.height / 2 - 300, 1000, 600);
     this.outlinePosition = "outer";
     this.color = "#2f538e";
@@ -478,7 +479,8 @@ class GameState extends Rectangle { /*collapseit*/
   //   return properties;
   // };
   draw() { /*collapseit*/
-    c.setTransform(1, 0, 0, 1, 0, 0); // reset transforms
+    const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
+    ctx.setTransform(1, 0, 0, 1, 0, 0); // reset transforms
     super.draw();
     if (this.visible) {
       var contents = this.container.getAllProperties() as Array<any>;
@@ -498,8 +500,8 @@ class GameState extends Rectangle { /*collapseit*/
       }
       
       // Draw contents relative to GameState position
-      c.save();
-      c.translate(this.x, this.y);
+      ctx.save();
+      ctx.translate(this.x, this.y);
       
       //Draw everything in its container
       for (let i = 0; i < contents.length; i++) { //Lembrar que também há um destes na JSWindow.
@@ -532,7 +534,7 @@ class GameState extends Rectangle { /*collapseit*/
           break;
         }
       }
-      c.restore();
+      ctx.restore();
     }
   };
 }
@@ -550,6 +552,7 @@ class JSWindow extends Rectangle { /*collapseit*/
   container: { [key: string]: any };
   parent?: JSWindow | GameState;
   constructor(width: number, height: number) {
+    const canvas = (window as any).globals.canvas;
     // By default the JSWindow is centered in the canvas. If a parent is
     // supplied we'll initialize relative to the parent's coordinates.
     super(canvas.width/2 - width/2, -height, width, height);
@@ -571,6 +574,7 @@ class JSWindow extends Rectangle { /*collapseit*/
     this.parent = undefined;
   }
   draw() { /*collapseit*/
+    const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
     super.draw();
     if (this.visible) {
       var contents = this.container.getAllProperties();
@@ -589,8 +593,8 @@ class JSWindow extends Rectangle { /*collapseit*/
       }
       
       // Draw contents relative to JSWindow position
-      c.save();
-      c.translate(this.x, this.y);
+      ctx.save();
+      ctx.translate(this.x, this.y);
       
       //Draw everything in its container
       for (let j = 0; j < contents.length; j++) { //Lembrar que também há um destes na GameState.
@@ -620,11 +624,12 @@ class JSWindow extends Rectangle { /*collapseit*/
           break;
         }
       }
-      c.restore();
+      ctx.restore();
     }
   };
   
   updatePos() { /*collapseit*/
+    const canvas = (window as any).globals.canvas;
     // Compute show/hide targets relative to parent if present, otherwise use canvas
     const targetShowY = this.parent ? (-this.parent.y + canvas.height / 2 - this.height / 2) : (canvas.height / 2 - this.height / 2);
     const startShowY = this.parent ? (-this.parent.y - this.height) : -this.height;
@@ -652,6 +657,7 @@ class JSWindow extends Rectangle { /*collapseit*/
   };
   
   show() { /*collapseit*/
+    const canvas = (window as any).globals.canvas;
     // Starting position
     this.x = this.parent ? (-this.parent.x + canvas.width / 2 - this.width / 2) : (canvas.width / 2 - this.width / 2);
     this.y = this.parent ? (-this.parent.y - this.height) : -this.height;
@@ -660,6 +666,7 @@ class JSWindow extends Rectangle { /*collapseit*/
   };
   
   hide() { /*collapseit*/
+    const canvas = (window as any).globals.canvas;
     // Starting position
     this.x = this.parent ? (-this.parent.x + canvas.width / 2 - this.width / 2) : (canvas.width / 2 - this.width / 2);
     this.y = this.parent ? (-this.parent.y + canvas.height / 2 - this.height / 2) : (canvas.height / 2 - this.height / 2);
@@ -701,7 +708,7 @@ export {
   Rectangle,
   Circle,
   Label,
-  Button,
+  // Button,
   GameState,
   JSWindow
 };
