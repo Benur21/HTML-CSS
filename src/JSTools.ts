@@ -450,7 +450,238 @@ Button.prototype.onhover = function () {
     this.outlineColor = transparent;
   }
 };
+/*--------------------------------------Function-21-----------------------------------------------------------------*/
+class GameState extends Rectangle { /*collapseit*/
+  container: { [key: string]: any };
+  constructor() {
+    super(canvas.width / 2 - 500, canvas.height / 2 - 300, 1000, 600);
+    this.outlinePosition = "outer";
+    this.color = "#2f538e";
+    this.visible = false;
+    this.container = new Proxy({}, {
+      set: (target: any, prop: string | symbol, value: any) => {
+        target[prop as any] = value;
+        if (value && typeof value === "object" && "parent" in value) {
+          try { value.parent = this; } catch (e) { /* ignore readonly */ }
+        }
+        return true;
+      }
+    });
+  }
+  // getAllProperties() {
+  //   var properties = [];
+  //   for (var prop in this) {
+  //     if (this.hasOwnProperty(prop) && typeof this[prop] !== "function") {
+  //       properties.push(this[prop]);
+  //     }
+  //   }
+  //   return properties;
+  // };
+  draw() { /*collapseit*/
+    c.setTransform(1, 0, 0, 1, 0, 0); // reset transforms
+    super.draw();
+    if (this.visible) {
+      var contents = this.container.getAllProperties() as Array<any>;
+      
+      //Order controls by showIndex
+      var indices = [];
+      var controls = [];
+      for (let i = 0; i < contents.length; i++) {
+        if (typeof contents[i] == "object" && typeof contents[i].showIndex == "number") {
+          indices.push(i);
+          controls.push(contents[i]);
+        }
+      }
+      controls.sort((a, b) => a.showIndex - b.showIndex); //Lower is drawn first, in back.
+      for (let i = 0; i < controls.length; i++) {
+        contents[indices[i]] = controls[i];
+      }
+      
+      // Draw contents relative to GameState position
+      c.save();
+      c.translate(this.x, this.y);
+      
+      //Draw everything in its container
+      for (let i = 0; i < contents.length; i++) { //Lembrar que também há um destes na JSWindow.
+        switch (typeof(contents[i])) {
+        case "object":
+          if (contents[i] instanceof TextButton) {
+            contents[i].update();
+            contents[i].draw();
+          } else if (contents[i] instanceof Label) {
+            contents[i].updateLanguage();
+            contents[i].updateContext();
+            contents[i].draw();
+          } else if (contents[i] instanceof JSWindow) {
+            contents[i].draw();
+            contents[i].updatePos();
+          } else if (contents[i] instanceof Ball) {
+            contents[i].drawText();
+            contents[i].checkPos();
+            contents[i].draw();
+            contents[i].updatePos();
+            contents[i].delayStop();
+          } else {
+            contents[i].draw();
+          }
+          break;
+        case "function":
+          if (!(contents[i].toString().includes("getAllInstances")||contents[i].toString().includes("getAllProperties"))) {
+            contents[i]();
+          }
+          break;
+        }
+      }
+      c.restore();
+    }
+  };
+}
+/*--------------------------------------Function-22-----------------------------------------------------------------*/
+/*
+ * JSWindow is a class that represents a window in the game, which can be shown or hidden.
+ * It extends the Rectangle class and has properties for size, position, and visibility.
+ * It also has methods for drawing the window, updating its position, and showing or hiding it.
+ * To use, its draw() and updatePos() methods should be called in the main loop.
+ */
+class JSWindow extends Rectangle { /*collapseit*/
+  maxYMoveSpeed: number;
+  showing: boolean;
+  hiding: boolean;
+  container: { [key: string]: any };
+  parent?: JSWindow | GameState;
+  constructor(width: number, height: number) {
+    // By default the JSWindow is centered in the canvas. If a parent is
+    // supplied we'll initialize relative to the parent's coordinates.
+    super(canvas.width/2 - width/2, -height, width, height);
+    this.color = "#1062e8";
+    this.outlinePosition = "inner";
+    this.maxYMoveSpeed = 40;
+    this.showing = false;
+    this.hiding = false;
+    this.container = new Proxy({}, {
+      // Add parent to any object added to the container
+      set: (target: any, prop: string | symbol, value: any) => {
+        target[prop as any] = value;
+        if (value && typeof value === "object" && "parent" in value) {
+          try { value.parent = this; } catch (e) { /* ignore readonly */ }
+        }
+        return true;
+      }
+    });
+    this.parent = undefined;
+  }
+  draw() { /*collapseit*/
+    super.draw();
+    if (this.visible) {
+      var contents = this.container.getAllProperties();
+      //Order controls by showIndex
+      var indices = [];
+      var controls = [];
+      for (let j = 0; j < contents.length; j++) {
+        if (typeof contents[j] == "object" && typeof contents[j].showIndex == "number") {
+          indices.push(j);
+          controls.push(contents[j]);
+        }
+      }
+      controls.sort(function(a,b){return b.showIndex-a.showIndex});
+      for (let j = 0; j < controls.length; j++) {
+        contents[indices[j]] = controls[j];
+      }
+      
+      // Draw contents relative to JSWindow position
+      c.save();
+      c.translate(this.x, this.y);
+      
+      //Draw everything in its container
+      for (let j = 0; j < contents.length; j++) { //Lembrar que também há um destes na GameState.
+        switch (typeof(contents[j])) {
+        case "object":
+          if (contents[j] instanceof TextButton) {
+            contents[j].update();
+            contents[j].draw();
+          } else if (contents[j] instanceof Label) {
+            contents[j].updateLanguage();
+            contents[j].updateContext();
+            contents[j].draw();
+          } else if (contents[j] instanceof Ball) {
+            contents[j].drawText();
+            contents[j].checkPos();
+            contents[j].draw();
+            contents[j].updatePos();
+            contents[j].delayStop();
+          } else {
+            contents[j].draw();
+          }
+          break;
+        case "function":
+          if (!(contents[j].toString().includes("getAllInstances")||contents[j].toString().includes("getAllProperties"))) {
+            contents[j]();
+          }
+          break;
+        }
+      }
+      c.restore();
+    }
+  };
+  
+  updatePos() { /*collapseit*/
+    // Compute show/hide targets relative to parent if present, otherwise use canvas
+    const targetShowY = this.parent ? (-this.parent.y + canvas.height / 2 - this.height / 2) : (canvas.height / 2 - this.height / 2);
+    const startShowY = this.parent ? (-this.parent.y - this.height) : -this.height;
+    const targetHideY = this.parent ? (-this.parent.y + canvas.height) : canvas.height;
 
+    const showProgress = distance(0, this.y, 0, targetShowY) /*Current*/ /
+                         distance(0, startShowY, 0, targetShowY) /*Total*/;
+    const hideProgress = distance(0, this.y, 0, targetHideY) /*Current*/ /
+                         distance(0, targetShowY, 0, targetHideY) /*Total*/;
+
+    if (this.showing) {
+      this.visible = true;
+      this.y += this.maxYMoveSpeed * showProgress;
+      if (Math.round(this.y) === Math.round(targetShowY)) {
+        this.showing = false;
+      }
+    }
+    if (this.hiding) {
+      this.y += this.maxYMoveSpeed * (1 - hideProgress) + 1;
+      if (this.y > targetHideY) {
+        this.hiding = false;
+        this.visible = false;
+      }
+    }
+  };
+  
+  show() { /*collapseit*/
+    // Starting position
+    this.x = this.parent ? (-this.parent.x + canvas.width / 2 - this.width / 2) : (canvas.width / 2 - this.width / 2);
+    this.y = this.parent ? (-this.parent.y - this.height) : -this.height;
+    this.showing = true;
+    this.hiding = false;
+  };
+  
+  hide() { /*collapseit*/
+    // Starting position
+    this.x = this.parent ? (-this.parent.x + canvas.width / 2 - this.width / 2) : (canvas.width / 2 - this.width / 2);
+    this.y = this.parent ? (-this.parent.y + canvas.height / 2 - this.height / 2) : (canvas.height / 2 - this.height / 2);
+    this.showing = false;
+    this.hiding = true;
+  };
+  /**
+   * @returns Returns true if this window is the topmost visible window.
+   */
+  isTopWindow(): boolean {
+    const jsWindows = JSWindow.getAllInstances() as Array<JSWindow>;
+    let topWindow: JSWindow | null = null;
+    let topShowIndex = -Infinity;
+    for (let i = 0; i < jsWindows.length; i++) {
+      if (jsWindows[i].visible && jsWindows[i].showIndex > topShowIndex) {
+        topShowIndex = jsWindows[i].showIndex;
+        topWindow = jsWindows[i];
+      }
+    }
+    return topWindow === this;
+  }
+}
 export {
   backToIndex,
   element,
@@ -471,6 +702,8 @@ export {
   Circle,
   Label,
   Button,
+  GameState,
+  JSWindow
 };
 
 
