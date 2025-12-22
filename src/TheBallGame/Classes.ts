@@ -690,6 +690,7 @@ class JSWindow extends Rectangle { /*collapseit*/
                          distance(0, targetShowY, 0, targetHideY) /*Total*/;
 
     if (this.showing) {
+      this.visible = true;
       this.y += this.maxYMoveSpeed * showProgress;
       if (Math.round(this.y) === Math.round(targetShowY)) {
         this.showing = false;
@@ -699,12 +700,13 @@ class JSWindow extends Rectangle { /*collapseit*/
       this.y += this.maxYMoveSpeed * (1 - hideProgress) + 1;
       if (this.y > targetHideY) {
         this.hiding = false;
+        this.visible = false;
       }
     }
   };
   
   show() { /*collapseit*/
-    this.visible = true;
+    // Starting position
     this.x = this.parent ? (-this.parent.x + canvas.width / 2 - this.width / 2) : (canvas.width / 2 - this.width / 2);
     this.y = this.parent ? (-this.parent.y - this.height) : -this.height;
     this.showing = true;
@@ -712,7 +714,7 @@ class JSWindow extends Rectangle { /*collapseit*/
   };
   
   hide() { /*collapseit*/
-    this.visible = true;
+    // Starting position
     this.x = this.parent ? (-this.parent.x + canvas.width / 2 - this.width / 2) : (canvas.width / 2 - this.width / 2);
     this.y = this.parent ? (-this.parent.y + canvas.height / 2 - this.height / 2) : (canvas.height / 2 - this.height / 2);
     this.showing = false;
