@@ -1,6 +1,6 @@
 import { canvasPadding } from './Initialization';
-import { Place, JSWindow } from './Classes';
-import { AnimationLOOP, GameState } from '../JSTools';
+import { Place } from './Classes';
+import { AnimationLOOP, GameState, JSWindow } from '../JSTools';
 
 const canvas = (window as any).globals.canvas;
 
@@ -15,11 +15,11 @@ game.outlinePosition = "outer";
 game.showIndex = 1;
 game.visible = true;
 
-const startWindow = new JSWindow(20,20,game.width-40,game.height-40,"Start Window");
-startWindow.visible = true;
+const startWindow = new JSWindow(game.width-40,game.height-40);
+game.container.startWindow = startWindow;
 startWindow.color = "#263599";
 startWindow.showIndex = 100;
-game.container.startWindow = startWindow;
+startWindow.show();
 
 var pathWidth = 195*canvas.width/1000;
 var normalPlacesStep = (game.width-pathWidth*2)/5;
