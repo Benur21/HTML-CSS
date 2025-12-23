@@ -1,7 +1,7 @@
 import "../languages/TheBallGame";
-import { AnimationLOOP, download, Label, Rectangle } from "../JSTools";
+import { AnimationLOOP, download, GameState, JSWindow, Label, Rectangle, TextButton } from "../JSTools";
 import { setKeyStates } from "./Events";
-import { Ball, GameState, JSWindow, TextButton } from "./Classes";
+import { Ball } from "./Classes";
 
 const c = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
 
