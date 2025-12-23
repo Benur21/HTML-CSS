@@ -383,4 +383,4 @@ class Ball extends Circle {
 // };
 
 
-export { TextButton, PlayerInfo, Ball };
+export { PlayerInfo, Ball };

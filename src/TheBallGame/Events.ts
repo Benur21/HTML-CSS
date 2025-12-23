@@ -1,14 +1,13 @@
-import { resizeCanvas } from "../JSTools";
-import { background } from "./Initialization";
-import { game } from "./Main";
+import { resizeCanvas, setMouseProvider } from '../JSTools';
+import { background } from './Initialization';
 
 const canvas = (window as any).globals.canvas as HTMLCanvasElement;
 
 var lastKey;
-var upIsDown = false;
-var leftIsDown = false;
-var rightIsDown = false;
-var downIsDown = false;
+export let upIsDown = false;
+export let leftIsDown = false;
+export let rightIsDown = false;
+export let downIsDown = false;
 document.body.onkeydown = function (event) {
   lastKey = event.which || event.keyCode || event.code;
   if (lastKey === 38 || lastKey === 87) {
@@ -39,7 +38,7 @@ document.body.onkeyup = function (event) {
     downIsDown = false;
   }
 };
-var mouseX: number, mouseY: number, mouseIsDown: boolean;
+export let mouseX: number, mouseY: number, mouseIsDown: boolean;
 document.body.onmousemove = function (event) {
   // Compute mouse coordinates in canvas drawing coordinate space.
   // Use getBoundingClientRect to account for page layout and CSS scaling.
@@ -59,9 +58,11 @@ document.body.onmouseup = function () {
 document.body.onresize = onresize;
 function onresize() {
   resizeCanvas();
-  background.style.width = innerWidth + "px";
-  background.style.height = innerHeight + "px";
+  background.style.width = innerWidth + 'px';
+  background.style.height = innerHeight + 'px';
 }
+
+setMouseProvider(() => ({ x: mouseX, y: mouseY, isDown: mouseIsDown }));
 
 function setKeyStates(states: {
   upIsDown?: boolean;
@@ -69,21 +70,10 @@ function setKeyStates(states: {
   rightIsDown?: boolean;
   downIsDown?: boolean;
 }) {
-  if (typeof states.upIsDown === "boolean") upIsDown = states.upIsDown;
-  if (typeof states.leftIsDown === "boolean") leftIsDown = states.leftIsDown;
-  if (typeof states.rightIsDown === "boolean") rightIsDown = states.rightIsDown;
-  if (typeof states.downIsDown === "boolean") downIsDown = states.downIsDown;
+  if (typeof states.upIsDown === 'boolean') upIsDown = states.upIsDown;
+  if (typeof states.leftIsDown === 'boolean') leftIsDown = states.leftIsDown;
+  if (typeof states.rightIsDown === 'boolean') rightIsDown = states.rightIsDown;
+  if (typeof states.downIsDown === 'boolean') downIsDown = states.downIsDown;
 }
 
-export {
-  mouseX,
-  mouseY,
-  mouseIsDown,
-  lastKey,
-  upIsDown,
-  leftIsDown,
-  rightIsDown,
-  downIsDown,
-  setKeyStates,
-  onresize,
-};
+export { lastKey, setKeyStates, onresize };

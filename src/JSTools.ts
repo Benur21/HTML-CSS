@@ -1,6 +1,5 @@
 import './globals';
-let canvas: HTMLCanvasElement;
-let ctx: CanvasRenderingContext2D;
+let mouseProvider: (() => { x: number; y: number; isDown: boolean }) | null = null;
 /*--------------------------------------Function-1------------------------------------------------------------------*/
 function backToIndex(){ /*collapse(1,313)*/
   var currentURL = location.href;
@@ -507,25 +506,14 @@ class GameState extends Rectangle { /*collapseit*/
       for (let i = 0; i < contents.length; i++) { //Lembrar que também há um destes na JSWindow.
         switch (typeof(contents[i])) {
         case "object":
-          if (contents[i] instanceof TextButton) {
-            contents[i].update();
-            contents[i].draw();
-          } else if (contents[i] instanceof Label) {
-            contents[i].updateLanguage();
-            contents[i].updateContext();
-            contents[i].draw();
-          } else if (contents[i] instanceof JSWindow) {
-            contents[i].draw();
-            contents[i].updatePos();
-          } else if (contents[i] instanceof Ball) {
-            contents[i].drawText();
-            contents[i].checkPos();
-            contents[i].draw();
-            contents[i].updatePos();
-            contents[i].delayStop();
-          } else {
-            contents[i].draw();
-          }
+          contents[i].update && contents[i].update();
+          contents[i].updateLanguage && contents[i].updateLanguage();
+          contents[i].updateContext && contents[i].updateContext();
+          contents[i].drawText && contents[i].drawText();
+          contents[i].checkPos && contents[i].checkPos();
+          contents[i].draw && contents[i].draw();
+          contents[i].updatePos && contents[i].updatePos();
+          contents[i].delayStop && contents[i].delayStop();
           break;
         case "function":
           if (!(contents[i].toString().includes("getAllInstances")||contents[i].toString().includes("getAllProperties"))) {
@@ -600,22 +588,14 @@ class JSWindow extends Rectangle { /*collapseit*/
       for (let j = 0; j < contents.length; j++) { //Lembrar que também há um destes na GameState.
         switch (typeof(contents[j])) {
         case "object":
-          if (contents[j] instanceof TextButton) {
-            contents[j].update();
-            contents[j].draw();
-          } else if (contents[j] instanceof Label) {
-            contents[j].updateLanguage();
-            contents[j].updateContext();
-            contents[j].draw();
-          } else if (contents[j] instanceof Ball) {
-            contents[j].drawText();
-            contents[j].checkPos();
-            contents[j].draw();
-            contents[j].updatePos();
-            contents[j].delayStop();
-          } else {
-            contents[j].draw();
-          }
+          contents[j].update && contents[j].update();
+          contents[j].updateLanguage && contents[j].updateLanguage();
+          contents[j].updateContext && contents[j].updateContext();
+          contents[j].drawText && contents[j].drawText();
+          contents[j].checkPos && contents[j].checkPos();
+          contents[j].draw && contents[j].draw();
+          contents[j].updatePos && contents[j].updatePos();
+          contents[j].delayStop && contents[j].delayStop();
           break;
         case "function":
           if (!(contents[j].toString().includes("getAllInstances")||contents[j].toString().includes("getAllProperties"))) {
@@ -712,18 +692,19 @@ class TextButton extends Label {
   }
   
   onhover() { /*collapseit*/
+    const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
     if (!this.isFocused()) {
       return;
     }
     
     // Map global mouse coords into the current canvas transform's local space so
     // hit-testing matches where the control is actually drawn (considering translate). (Copilot code)
-    let localMouseX = mouseX;
-    let localMouseY = mouseY;
+    let localMouseX = getMouse().x;
+    let localMouseY = getMouse().y;
     try {
-      const inv = c.getTransform();
+      const inv = ctx.getTransform()
       inv.invertSelf(); // invertSelf is supported in modern browsers
-      const p = new DOMPoint(mouseX, mouseY).matrixTransform(inv);
+      const p = new DOMPoint(getMouse().x, getMouse().y).matrixTransform(inv);
       localMouseX = p.x;
       localMouseY = p.y;
     } catch (e) {
@@ -733,13 +714,13 @@ class TextButton extends Label {
     // (Copilot code end)
     let hovering1, hovering2, hovering3, hovering4;
     if (this.xAlign == "center") { //Para sincronizar o hovering com os align, e para verificar se há hovering.
-      hovering1 = localMouseX > this.x - c.measureText(this.text).width / 2 - this.hoveringHeightIncrement;
-      hovering2 = localMouseX < this.x + c.measureText(this.text).width / 2 + this.hoveringHeightIncrement;
+      hovering1 = localMouseX > this.x - ctx.measureText(this.text).width / 2 - this.hoveringHeightIncrement;
+      hovering2 = localMouseX < this.x + ctx.measureText(this.text).width / 2 + this.hoveringHeightIncrement;
       hovering3 = localMouseY > this.y - this.textHeight / 2 - this.hoveringHeightIncrement;
       hovering4 = localMouseY < this.y + this.textHeight / 2 + this.hoveringHeightIncrement;
     } else if (this.xAlign == "start") {
       hovering1 = localMouseX > this.x - this.hoveringHeightIncrement;
-      hovering2 = localMouseX < this.x + c.measureText(this.text).width + this.hoveringHeightIncrement;
+      hovering2 = localMouseX < this.x + ctx.measureText(this.text).width + this.hoveringHeightIncrement;
       hovering3 = localMouseY > this.y - this.textHeight / 2 - this.hoveringHeightIncrement;
       hovering4 = localMouseY < this.y + this.textHeight / 2 + this.hoveringHeightIncrement;
     } else {
@@ -770,10 +751,10 @@ class TextButton extends Label {
     }
     
     if (this.internal_hovered) {
-      if (mouseIsDown) { //Se isto for verdade, ou seja está-se clicando em cima do botão, só falta largar para a...
+      if (getMouse().isDown) { //Se isto for verdade, ou seja está-se clicando em cima do botão, só falta largar para a...
         this.internal_waitingForRelease = true; //...condição seguinte ser executada.
       }
-      if (!mouseIsDown && this.internal_waitingForRelease) { //É isto que fica à espera de Release.
+      if (!getMouse().isDown && this.internal_waitingForRelease) { //É isto que fica à espera de Release.
         this.onclick && this.onclick();
         this.internal_waitingForRelease = false;
       }
@@ -811,6 +792,15 @@ class TextButton extends Label {
     }
   }
 }
+/*--------------------------------------Function-24-----------------------------------------------------------------*/
+function setMouseProvider(fn: () => {x: number, y: number, isDown: boolean}) {
+  mouseProvider = fn;
+}
+/*--------------------------------------Function-25-----------------------------------------------------------------*/
+function getMouse() {
+  if (mouseProvider) return mouseProvider();
+  return { x: 0, y: 0, isDown: false };
+}
 
 export {
   backToIndex,
@@ -834,7 +824,8 @@ export {
   // Button,
   GameState,
   JSWindow,
-  TextButton
+  TextButton,
+  setMouseProvider,
 };
 
 
