@@ -42,7 +42,6 @@ if (ctx == null) {
 }
 const canvasPadding = 10;
 resizeCanvas();
-const places: Place[] = [];
 
 export { canvasPadding, places };
 
