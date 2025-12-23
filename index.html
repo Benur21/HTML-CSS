@@ -7,8 +7,7 @@
   <meta name="description" content="Aqui estará um conjunto de páginas feitas em HTML e utilizando JavaScript puro.">
   <meta name="keywords" content="HTML pages, Páginas HTML, JS pages, Páginas JS, Jogo da Bolinha, The Ball Game, JavaScript Animations, JavaScript Games, Animações JavaScript, Jogos JavaScript, html js comxa com">
 	<link rel="icon" href="resources/HTML5.png"/>
-	<script type="module" charset="UTF-8" src="src/JSTools.js"></script>
-	<script type="module" charset="UTF-8" src="src/languages/index.js"></script>
+
 	<style> /*NPP_COLLAPSE_IT*/
 	  * {
 	    text-align: center;
@@ -32,14 +31,14 @@
   <h1 id="subtitle">Bem vindo a esta página!</h1>
   <p id="description">Aqui haverá um espaço para páginas web... Esteja atento!</p>
 	<button id="reloadButton" onclick="location.reload(true);">Recarregar</button>
-	<select id="dropdownLanguage" onchange="setLanguage(this.value)" style="margin-left: 160px">
+	<select id="dropdownLanguage" style="margin-left: 160px">
 	  <option value="pt">Português</option>
 	  <option value="en">English</option>
-	</select><script>/*ONLOAD=*/var dropdownLanguage = element("dropdownLanguage");if(getCookie("language")!=undefined&&getCookie("language")!=""){dropdownLanguage.value=getCookie("language")}else{dropdownLanguage.value="pt"}</script>
+	</select>
   <p class="links"><a id="Animation 1_html" href="Animation1.html">Animação 1</a></p>
 	<p class="links"><a id="Animation 2_html" href="Animation2.html">Animação 2</a></p>
 	<p class="links"><a id="Ball Game_html" href="TheBallGame.html">Jogo da Bolinha</a></p>
 	<p class="links"><a id="Monopoly_html" href="Monopoly.html">Monopólio</a></p>
-	<script name="Define Language">setLanguage(getCookie("language"));</script>
+	<script type="module" src="src/index/entrypoint.ts"></script>
 </body>
 </html>
