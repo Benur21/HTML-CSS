@@ -1,6 +1,6 @@
 import { canvasPadding } from './Initialization';
 import { Place } from './Classes';
-import { AnimationLOOP, GameState, JSWindow } from '../JSTools';
+import { AnimationLOOP, GameState, JSWindow, TextButton } from '../JSTools';
 
 const canvas = (window as any).globals.canvas;
 
@@ -20,6 +20,14 @@ game.container.startWindow = startWindow;
 startWindow.color = "#263599";
 startWindow.showIndex = 100;
 startWindow.show();
+
+(window as any).globals.startWindow = startWindow;
+
+startWindow.container.closeButton = new TextButton(game.width-60, 20, "X", "center", 20, 5);
+startWindow.container.closeButton.updateLanguage = function() {this.text="X"};
+startWindow.container.closeButton.onclick = () => {
+  startWindow.hide();
+}
 
 var pathWidth = 195*canvas.width/1000;
 var normalPlacesStep = (game.width-pathWidth*2)/5;
