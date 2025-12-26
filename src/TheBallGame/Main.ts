@@ -66,18 +66,18 @@ var debugTax = 6;
 var debugFrameRate: number;
 var debugTimer: number;
 
-mainMenu.container.w = new JSWindow(700, 500);
-mainMenu.container.w.container.closeButton = new TextButton(680, 20, "X", "center", 20, 5);
-mainMenu.container.w.container.closeButton.updateLanguage = function(){this.text="X"};
-mainMenu.container.w.container.closeButton.onclick = () => {
-  mainMenu.container.w.hide();
-}
-mainMenu.container.w.container.welcomemsg = new Label(350, 250, "Welcome! 😀", "center");
-mainMenu.container.w.container.welcomemsg.updateLanguage = function(){this.text="Welcome! 😀"};
-mainMenu.container.w.visible = true;
-mainMenu.container.w.show();
+// mainMenu.container.w = new JSWindow(700, 500);
+// mainMenu.container.w.container.closeButton = new TextButton(680, 20, "X", "center", 20, 5);
+// mainMenu.container.w.container.closeButton.updateLanguage = function(){this.text="X"};
+// mainMenu.container.w.container.closeButton.onclick = () => {
+//   mainMenu.container.w.hide();
+// }
+// mainMenu.container.w.container.welcomemsg = new Label(350, 250, "Welcome! 😀", "center");
+// mainMenu.container.w.container.welcomemsg.updateLanguage = function(){this.text="Welcome! 😀"};
+// mainMenu.container.w.visible = true;
+// mainMenu.container.w.show();
 
-(window as any).globals.mainMenu = mainMenu;
+// (window as any).globals.mainMenu = mainMenu;
 
 //var gameState = "mainMenu"; /*	'mainMenu'	'game'	'options'	*/
 /*------------------------------------LOOP-----------------------------------------*/  
