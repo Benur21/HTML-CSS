@@ -43,5 +43,5 @@ if (ctx == null) {
 const canvasPadding = 10;
 resizeCanvas();
 
-export { canvasPadding, places };
+export { canvasPadding };
 

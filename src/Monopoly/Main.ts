@@ -1,5 +1,5 @@
 import { canvasPadding } from './Initialization';
-import { Place } from './Classes';
+import { Board } from './Classes';
 import { AnimationLOOP, GameState, JSWindow, TextButton } from '../JSTools';
 
 const canvas = (window as any).globals.canvas;
@@ -29,50 +29,8 @@ startWindow.container.closeButton.onclick = () => {
   startWindow.hide();
 }
 
-var pathWidth = 195*canvas.width/1000;
-var normalPlacesStep = (game.width-pathWidth*2)/5;
 
-for (let i = 0; i < 24; i++) { //Creating and Moving Places
-  switch (true) { //Places are 100x195
-  //Corner Places
-  case (i==0):
-    game.container[i] = new Place(game.width-pathWidth, game.height-pathWidth, pathWidth, pathWidth, "cornerA");
-    game.container[i].color = "#FF793F";
-    break;
-  case (i==6):
-    game.container[i] = new Place(0, game.height-pathWidth, pathWidth, pathWidth, "cornerB");
-    game.container[i].color = "#FF793F";
-    break;
-  case (i==12):
-    game.container[i] = new Place(0, 0, pathWidth, pathWidth, "cornerC");
-    game.container[i].color = "#FF793F";
-    break;
-  case (i==18):
-    game.container[i] = new Place(game.width-pathWidth, 0, pathWidth, pathWidth, "cornerD");
-    game.container[i].color = "#FF793F";
-    break;
-  //Normal Places
-  case (i>=1&&i<=5):
-    game.container[i] = new Place(game.width-pathWidth-normalPlacesStep*(i%6), game.height-pathWidth, normalPlacesStep, pathWidth, "normalA"+(i%6));
-    game.container[i].color = "#95CCF9";
-    break;
-  case (i>=7&&i<=11):
-    game.container[i] = new Place(0, game.height-pathWidth-normalPlacesStep*(i%6), pathWidth, normalPlacesStep, "normalB"+(i%6));
-    game.container[i].color = "#95CCF9";
-    break;
-  case (i>=13&&i<=17):
-    game.container[i] = new Place(pathWidth+normalPlacesStep*((i%6)-1), 0, normalPlacesStep, pathWidth, "normalC"+(i%6));
-    game.container[i].color = "#95CCF9";
-    break;
-  case (i>=19&&i<=23):
-    game.container[i] = new Place(game.width-pathWidth, pathWidth+normalPlacesStep*((i%6)-1), pathWidth, normalPlacesStep, "normalD"+(i%6));
-    game.container[i].color = "#95CCF9";
-    break;
-  }
-  game.container[i].showIndex = 50;
-  game.container[i].outlinePosition = "center";
-}
-
+game.container.board = new Board(0, 0);
 AnimationLOOP(function(){
   game.draw();
 });
