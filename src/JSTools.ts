@@ -319,7 +319,7 @@ class Label extends Control {
   textHeight: number;
   fontFamily: string;
   xAlign: "start" | "center";
-  yAlign: CanvasTextBaseline;
+  yAlign: "middle" | "top";
   constructor(x: number, y: number, text: string, xAlign: "start" | "center") {
     super(x, y); //Inherit from Control
     this.text = text;
@@ -330,6 +330,9 @@ class Label extends Control {
     this.xAlign = xAlign; //Horizontal Aligning
     this.yAlign = "middle"; //Vertical Aligning
   }
+  /**
+   * Call before Lable.draw
+   */
   updateContext () {
     const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
     
@@ -342,20 +345,36 @@ class Label extends Control {
       ctx.font = "bold " + this.textHeight + "px " + this.fontFamily;
     }
   }
+  /**
+   * Call after Label.updateContext
+   */
   draw () {
     const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
     
     if (this.visible) {
-      /*
-      var something;
-      if (this.xAlign) {
-        something = this.x - c.measureText(this.text).width / 2;
+      // support multi-line text
+      const lines = this.text.split(/\r?\n/);
+      console.log("🚀 ~ lines:", lines);
+      const lineHeight = this.textHeight * 1.2;
+
+      // Use 'middle' baseline for consistent vertical centering per line
+      if (this.yAlign === "middle") ctx.textBaseline = "middle"
+      else if (this.yAlign === "top") ctx.textBaseline = "top";
+
+      // Compute starting Y so multi-line block is centered when yAlign === "middle"
+      let startY: number;
+      if (this.yAlign === "middle") {
+        startY = this.y - ((lines.length - 1) / 2) * lineHeight;
       } else {
-        something = this.x;
-      }*/ //Substituido por c.textAlign
-      
-      ctx.strokeText(this.text, this.x, this.y);
-      ctx.fillText(this.text, this.x, this.y);
+        // fallback: align first line at this.y
+        startY = this.y;
+      }
+
+      for (let i = 0; i < lines.length; i++) {
+        const lineY = startY + i * lineHeight;
+        ctx.strokeText(lines[i], this.x, lineY);
+        ctx.fillText(lines[i], this.x, lineY);
+      }
     }
   };
   updateLanguage () {

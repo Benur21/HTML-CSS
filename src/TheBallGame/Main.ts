@@ -74,7 +74,6 @@ var debugTimer: number;
 // }
 // mainMenu.container.w.container.welcomemsg = new Label(350, 250, "Welcome! 😀", "center");
 // mainMenu.container.w.container.welcomemsg.updateLanguage = function(){this.text="Welcome! 😀"};
-// mainMenu.container.w.visible = true;
 // mainMenu.container.w.show();
 
 // (window as any).globals.mainMenu = mainMenu;
