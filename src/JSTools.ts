@@ -354,7 +354,6 @@ class Label extends Control {
     if (this.visible) {
       // support multi-line text
       const lines = this.text.split(/\r?\n/);
-      console.log("🚀 ~ lines:", lines);
       const lineHeight = this.textHeight * 1.2;
 
       // Use 'middle' baseline for consistent vertical centering per line
@@ -820,6 +819,41 @@ function getMouse() {
   if (mouseProvider) return mouseProvider();
   return { x: 0, y: 0, isDown: false };
 }
+/*--------------------------------------Function-26-----------------------------------------------------------------*/
+/**
+ * Supports both SVG and PNG.
+ */
+class JSImage extends Control {
+  src: string;
+  img: HTMLImageElement;
+  scale: number;
+  xAlign: "left" | "middle";
+  yAlign: "top" | "middle";
+  constructor(x: number, y: number, src: string, xAlign: "left" | "middle" = "left", yAlign: "top" | "middle" = "top") {
+    super(x, y);
+    this.src = src;
+    this.xAlign = xAlign;
+    this.yAlign = yAlign;
+    
+    this.img = new Image();
+    this.img.src = this.src;
+    
+    this.scale = 1;
+  }
+  
+  draw() {
+    const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
+    
+    ctx.save();
+    ctx.scale(this.scale, this.scale)
+    ctx.drawImage(
+      this.img,
+      this.x / this.scale - (this.xAlign === 'middle' ? this.img.width / 2 : 0),
+      this.y / this.scale - (this.yAlign === "middle" ? this.img.height / 2 : 0)
+    );
+    ctx.restore();
+  }
+}
 
 export {
   backToIndex,
@@ -845,6 +879,7 @@ export {
   JSWindow,
   TextButton,
   setMouseProvider,
+  JSImage
 };
 
 

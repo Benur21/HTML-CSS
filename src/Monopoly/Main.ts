@@ -1,6 +1,6 @@
 import { canvasPadding } from './Initialization';
 import { Board } from './Classes';
-import { AnimationLOOP, GameState, JSWindow, Label, TextButton } from '../JSTools';
+import { AnimationLOOP, GameState, JSWindow, Label, JSImage, TextButton } from '../JSTools';
 
 const canvas = (window as any).globals.canvas;
 
@@ -29,8 +29,16 @@ startWindow.container.closeButton.onclick = () => {
 }
 
 startWindow.container.welcomeText = new Label(650, 450, "Welcome! 😀", "center");
-startWindow.container.welcomeText.updateLanguage = function(){this.text="Bem vindo(a)\nao Monopólio!"};
+startWindow.container.welcomeText.updateLanguage = function(){this.text="Bem vindo(a)!\nBrevemente aqui será\npossível jogar ao"};
 
+startWindow.container.txt2 = new Label(650, 550+10, "Welcome! 😀", "center");
+startWindow.container.txt2.updateLanguage = function(){this.text="                                          !"};
+
+startWindow.container.img = new JSImage(650, 300, "/resources/HTML5.png", "middle", "middle");
+startWindow.container.img.scale = 0.3;
+
+startWindow.container.img2 = new JSImage(650, 550, "/resources/Monopoly.svg", "middle", "middle");
+startWindow.container.img2.scale = 0.3;
 
 game.container.board = new Board(0, 0);
 AnimationLOOP(function(){
