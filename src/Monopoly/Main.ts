@@ -34,10 +34,10 @@ startWindow.container.welcomeText.updateLanguage = function(){this.text="Bem vin
 startWindow.container.txt2 = new Label(650, 550+10, "Welcome! 😀", "center");
 startWindow.container.txt2.updateLanguage = function(){this.text="                                          !"};
 
-startWindow.container.img = new JSImage(650, 300, "/resources/HTML5.png", "middle", "middle");
+startWindow.container.img = new JSImage(650, 300, "resources/HTML5.png", "middle", "middle");
 startWindow.container.img.scale = 0.3;
 
-startWindow.container.img2 = new JSImage(650, 550, "/resources/Monopoly.svg", "middle", "middle");
+startWindow.container.img2 = new JSImage(650, 550, "resources/Monopoly.svg", "middle", "middle");
 startWindow.container.img2.scale = 0.3;
 
 game.container.board = new Board(0, 0);

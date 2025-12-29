@@ -844,14 +844,16 @@ class JSImage extends Control {
   draw() {
     const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
     
-    ctx.save();
-    ctx.scale(this.scale, this.scale)
-    ctx.drawImage(
-      this.img,
-      this.x / this.scale - (this.xAlign === 'middle' ? this.img.width / 2 : 0),
-      this.y / this.scale - (this.yAlign === "middle" ? this.img.height / 2 : 0)
-    );
-    ctx.restore();
+    if (this.img.complete && this.img.naturalWidth > 0 && this.img.naturalHeight > 0) {
+      ctx.save();
+      ctx.scale(this.scale, this.scale)
+      ctx.drawImage(
+        this.img,
+        this.x / this.scale - (this.xAlign === 'middle' ? this.img.width / 2 : 0),
+        this.y / this.scale - (this.yAlign === "middle" ? this.img.height / 2 : 0)
+      );
+      ctx.restore();
+    }
   }
 }
 
