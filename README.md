@@ -1,7 +1,7 @@
 https://benur21.github.io/HTML-CSS/
 
 # HTML-CSS
-Um antigo site totalmente feito por mim
+Um site totalmente feito por mim
 
 # Build and start
 
