@@ -556,12 +556,10 @@ class JSWindow extends Rectangle { /*collapseit*/
   showing: boolean;
   hiding: boolean;
   container: { [key: string]: any };
-  parent?: JSWindow | GameState;
+  #parent: JSWindow | GameState | undefined;
   constructor(width: number, height: number) {
     const canvas = (window as any).globals.canvas;
-    // By default the JSWindow is centered in the canvas. If a parent is
-    // supplied we'll initialize relative to the parent's coordinates.
-    super(canvas.width/2 - width/2, -height, width, height);
+    super(canvas.width / 2 - width / 2, -height, width, height);
     this.color = "#1062e8";
     this.outlinePosition = "inner";
     this.maxYMoveSpeed = 40;
@@ -578,6 +576,19 @@ class JSWindow extends Rectangle { /*collapseit*/
       }
     });
     this.parent = undefined;
+    Object.defineProperty(this, 'parent', {
+      enumerable: true,
+      configurable: true,
+      get: () => this.#parent,
+      set: (value: JSWindow | GameState | undefined) => {
+        this.#parent = value;
+        if (value instanceof JSWindow || value instanceof GameState) {
+          const canvas = (window as any).globals.canvas;
+          this.x = -value.x + canvas.width / 2 - this.width / 2;
+          this.y = -value.y - this.height;
+        }
+      },
+    });
   }
   draw() { /*collapseit*/
     const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;

@@ -1,4 +1,3 @@
-import { Place } from "./Classes";
 import { element, resizeCanvas, getCookie, backToIndex } from "../JSTools";
 import { setLanguage } from "../languages/Monopoly";
 import '../globals';
