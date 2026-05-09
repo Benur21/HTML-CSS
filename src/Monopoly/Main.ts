@@ -41,6 +41,46 @@ startWindow.container.img2 = new JSImage(650, 550, "resources/Monopoly.svg", "mi
 startWindow.container.img2.scale = 0.3;
 
 game.container.board = new Board(0, 0);
+game.container.pawn1 = new JSImage(
+  game.container.board.x + game.container.board.width - 50,
+  game.container.board.y + game.container.board.height - 50,
+  'resources/pawn.svg',
+  'middle',
+  'middle',
+);
+game.container.pawn2 = new JSImage(
+  game.container.board.x + game.container.board.width - 120,
+  game.container.board.y + game.container.board.height - 50,
+  'resources/pawn.svg',
+  'middle',
+  'middle',
+);
+game.container.pawn3 = new JSImage(
+  game.container.board.x + game.container.board.width - 50,
+  game.container.board.y + game.container.board.height - 120,
+  'resources/pawn.svg',
+  'middle',
+  'middle',
+);
+game.container.pawn4 = new JSImage(
+  game.container.board.x + game.container.board.width - 120,
+  game.container.board.y + game.container.board.height - 120,
+  'resources/pawn.svg',
+  'middle',
+  'middle',
+);
+[
+  game.container.pawn1,
+  game.container.pawn2,
+  game.container.pawn3,
+  game.container.pawn4,
+].forEach(pawn => {
+  pawn.scale = 0.05;
+  pawn.editSVG((pawn: SVGElement) => {
+    pawn.setAttribute('fill', 'red');
+  }, '.pawn');
+});
+
 AnimationLOOP(function(){
   game.draw();
 });

@@ -565,6 +565,7 @@ class JSWindow extends Rectangle { /*collapseit*/
     this.maxYMoveSpeed = 40;
     this.showing = false;
     this.hiding = false;
+    this.visible = false; // JSWindow is invisible by default
     this.container = new Proxy({}, {
       // Add parent to any object added to the container
       set: (target: any, prop: string | symbol, value: any) => {
@@ -591,9 +592,9 @@ class JSWindow extends Rectangle { /*collapseit*/
     });
   }
   draw() { /*collapseit*/
-    const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
-    super.draw();
     if (this.visible) {
+      const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
+      super.draw();
       var contents = this.container.getAllProperties();
       //Order controls by showIndex
       var indices = [];
@@ -836,37 +837,121 @@ function getMouse() {
  */
 class JSImage extends Control {
   src: string;
-  img: HTMLImageElement;
+  img: JSImageImg;
   scale: number;
-  xAlign: "left" | "middle";
-  yAlign: "top" | "middle";
-  constructor(x: number, y: number, src: string, xAlign: "left" | "middle" = "left", yAlign: "top" | "middle" = "top") {
+  xAlign: 'left' | 'middle';
+  yAlign: 'top' | 'middle';
+  constructor(
+    x: number,
+    y: number,
+    src: string,
+    xAlign: 'left' | 'middle' = 'left',
+    yAlign: 'top' | 'middle' = 'top',
+  ) {
     super(x, y);
     this.src = src;
     this.xAlign = xAlign;
     this.yAlign = yAlign;
-    
-    this.img = new Image();
-    this.img.src = this.src;
-    
+
+    let type: 'png' | 'svg' | null;
+    switch (src.substring(src.length - 4)) {
+      case '.png':
+        type = 'png';
+        break;
+      case '.svg':
+        type = 'svg';
+        break;
+      default:
+        type = null;
+    }
+    this.img = {
+      src,
+      element: undefined,
+      type,
+    };
+
+    switch (type) {
+      case 'svg':
+        fetch(src)
+          .then(res => res.text())
+          .then(svgText => {
+            const parser = new DOMParser();
+
+            // convert svg string to svg element
+            const doc = parser.parseFromString(svgText, 'image/svg+xml');
+
+            this.img.element =
+              doc.getElementsByTagName('svg') &&
+              doc.getElementsByTagName('svg')[0];
+          });
+        break;
+      case 'png':
+        this.img.element = new Image();
+        this.img.element.src = src;
+        break;
+    }
+
     this.scale = 1;
   }
-  
+
   draw() {
-    const ctx = (window as any).globals.canvas.getContext('2d') as CanvasRenderingContext2D;
-    
-    if (this.img.complete && this.img.naturalWidth > 0 && this.img.naturalHeight > 0) {
+    const ctx = (window as any).globals.canvas.getContext(
+      '2d',
+    ) as CanvasRenderingContext2D;
+
+    // check if image is loaded and its type
+    if (
+      this.img.type === 'png' &&
+      this.img.element?.complete &&
+      this.img.element.naturalWidth > 0 &&
+      this.img.element.naturalHeight > 0
+    ) {
+      // draw  image
       ctx.save();
-      ctx.scale(this.scale, this.scale)
+      ctx.scale(this.scale, this.scale);
       ctx.drawImage(
-        this.img,
-        this.x / this.scale - (this.xAlign === 'middle' ? this.img.width / 2 : 0),
-        this.y / this.scale - (this.yAlign === "middle" ? this.img.height / 2 : 0)
+        this.img.element,
+        this.x / this.scale -
+          (this.xAlign === 'middle' ? this.img.element.width / 2 : 0),
+        this.y / this.scale -
+          (this.yAlign === 'middle' ? this.img.element.height / 2 : 0),
+      );
+      ctx.restore();
+    } else if (this.img.type === 'svg' && !!this.img.element) {
+      // rasterizar
+      const data = new XMLSerializer().serializeToString(this.img.element);
+      const img = new Image();
+      img.src = 'data:image/svg+xml;utf-8,' + encodeURIComponent(data);
+      //await img.decode() //fix svg blinking every few secs https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/decode
+
+      // draw image
+      ctx.save();
+      ctx.scale(this.scale, this.scale);
+      ctx.drawImage(
+        img,
+        this.x / this.scale - (this.xAlign === 'middle' ? img.width / 2 : 0),
+        this.y / this.scale - (this.yAlign === 'middle' ? img.height / 2 : 0),
       );
       ctx.restore();
     }
   }
+
+  editSVG(callback: (svg: SVGElement) => void, querySelector = 'svg') {
+    const selectedElem =
+      this.img.element?.querySelector<SVGElement>(querySelector);
+    if (selectedElem) {
+      callback(selectedElem);
+    }
+  }
 }
+
+/**
+ * Interface of data about the source image
+ */
+type JSImageImg =
+  | { src: string; type: 'png'; element?: HTMLImageElement }
+  | { src: string; type: 'svg'; element?: SVGElement }
+  | { src: string; type: null; element?: undefined };
 
 export {
   backToIndex,

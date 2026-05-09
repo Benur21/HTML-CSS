@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 136">
+  <g class="pawn" fill="blue">
+    <!-- Cabeça (maior) -->
+    <circle cx="28" cy="22" r="22" />
+
+    <!-- Pescoço (mais fino) -->
+    <rect x="22" y="44" width="12" height="14" />
+
+    <!-- Corpo (mais magro) -->
+    <path d="M16 58
+             C16 90, 10 105, 10 120
+             L46 120
+             C46 105, 40 90, 40 58
+             Z" />
+
+    <!-- Base -->
+    <rect x="0" y="120" width="56" height="16" rx="6" />
+  </g>
+</svg>
