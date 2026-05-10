@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+     viewBox="0 0 1000 280" xml:space="preserve">
+  
+  <defs>
+    <!-- Clean burgundy gradient -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#9B2847;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7A1F38;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Gold for building -->
+    <linearGradient id="buildingGold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD966;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D4AF37;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- White with slight gradient for depth -->
+    <linearGradient id="textWhite" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F5F5F5;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main background (starts at y=20 to allow building to extend above) -->
+  <rect x="0" y="20" width="1000" height="260" fill="url(#bgGradient)"/>
+  
+  <!-- Clean border frame -->
+  <rect x="8" y="28" width="984" height="244" fill="none" stroke="#FFFFFF" stroke-width="3" opacity="0.15"/>
+  
+  <!-- Building icon - larger and extending above the top -->
+  <g id="building-icon">
+    <!-- Main tower -->
+    <rect x="450" y="30" width="100" height="140" fill="url(#buildingGold)" rx="2"/>
+    
+    <!-- Tower top - extends above the red background -->
+    <polygon points="500,0 465,30 535,30" fill="url(#buildingGold)"/>
+    <polygon points="500,8 475,25 525,25" fill="#FFD966"/>
+    
+    <!-- Windows - clean grid pattern -->
+    <g fill="#7A1F38" opacity="0.6">
+      <!-- Row 1 -->
+      <rect x="460" y="40" width="14" height="16" rx="1"/>
+      <rect x="481" y="40" width="14" height="16" rx="1"/>
+      <rect x="505" y="40" width="14" height="16" rx="1"/>
+      <rect x="526" y="40" width="14" height="16" rx="1"/>
+      <!-- Row 2 -->
+      <rect x="460" y="63" width="14" height="16" rx="1"/>
+      <rect x="481" y="63" width="14" height="16" rx="1"/>
+      <rect x="505" y="63" width="14" height="16" rx="1"/>
+      <rect x="526" y="63" width="14" height="16" rx="1"/>
+      <!-- Row 3 -->
+      <rect x="460" y="86" width="14" height="16" rx="1"/>
+      <rect x="481" y="86" width="14" height="16" rx="1"/>
+      <rect x="505" y="86" width="14" height="16" rx="1"/>
+      <rect x="526" y="86" width="14" height="16" rx="1"/>
+      <!-- Row 4 -->
+      <rect x="460" y="109" width="14" height="16" rx="1"/>
+      <rect x="481" y="109" width="14" height="16" rx="1"/>
+      <rect x="505" y="109" width="14" height="16" rx="1"/>
+      <rect x="526" y="109" width="14" height="16" rx="1"/>
+      <!-- Row 5 -->
+      <rect x="460" y="132" width="14" height="16" rx="1"/>
+      <rect x="481" y="132" width="14" height="16" rx="1"/>
+      <rect x="505" y="132" width="14" height="16" rx="1"/>
+      <rect x="526" y="132" width="14" height="16" rx="1"/>
+      <!-- Row 6 -->
+      <rect x="460" y="155" width="14" height="11" rx="1"/>
+      <rect x="481" y="155" width="14" height="11" rx="1"/>
+      <rect x="505" y="155" width="14" height="11" rx="1"/>
+      <rect x="526" y="155" width="14" height="11" rx="1"/>
+    </g>
+    
+    <!-- Side towers for balance -->
+    <rect x="420" y="90" width="25" height="80" fill="url(#buildingGold)" opacity="0.8" rx="1"/>
+    <rect x="555" y="90" width="25" height="80" fill="url(#buildingGold)" opacity="0.8" rx="1"/>
+    
+    <!-- Base platform -->
+    <rect x="410" y="170" width="180" height="8" fill="url(#buildingGold)" rx="1"/>
+  </g>
+  
+  <!-- CAPITAL text - even larger -->
+  <g id="capital-text">
+    <text x="500" y="215" 
+          font-family="'Arial Black', 'Impact', 'Haettenschweiler', sans-serif" 
+          font-size="100" 
+          font-weight="900"
+          letter-spacing="22"
+          fill="url(#textWhite)" 
+          text-anchor="middle"
+          style="text-transform: uppercase;">CAPITAL</text>
+    
+    <!-- Clean shadow for depth -->
+    <text x="503" y="218" 
+          font-family="'Arial Black', 'Impact', 'Haettenschweiler', sans-serif" 
+          font-size="100" 
+          font-weight="900"
+          letter-spacing="22"
+          fill="#4A1225" 
+          text-anchor="middle"
+          opacity="0.5"
+          style="text-transform: uppercase;">CAPITAL</text>
+  </g>
+  
+  <!-- TYCOON text - larger -->
+  <g id="tycoon-text">
+    <text x="500" y="262" 
+          font-family="'Arial Black', 'Impact', 'Haettenschweiler', sans-serif" 
+          font-size="60" 
+          font-weight="900"
+          letter-spacing="28"
+          fill="#FFD966" 
+          text-anchor="middle"
+          style="text-transform: uppercase;">TYCOON</text>
+    
+    <!-- Clean shadow -->
+    <text x="502" y="264" 
+          font-family="'Arial Black', 'Impact', 'Haettenschweiler', sans-serif" 
+          font-size="60" 
+          font-weight="900"
+          letter-spacing="28"
+          fill="#4A1225" 
+          text-anchor="middle"
+          opacity="0.4"
+          style="text-transform: uppercase;">TYCOON</text>
+  </g>
+  
+  <!-- Professional divider line -->
+  <rect x="290" y="225" width="420" height="2" fill="#FFD966" opacity="0.3"/>
+  
+</svg>
