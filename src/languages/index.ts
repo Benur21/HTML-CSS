@@ -11,7 +11,7 @@ function setLanguage(language: "en" | "pt") {
     element("Animation 1_html")!.innerHTML = "Animation 1";
     element("Animation 2_html")!.innerHTML = "Animation 2";
     element("Ball Game_html")!.innerHTML = "The Ball Game";
-    element("Monopoly_html")!.innerHTML = "Monopoly";
+    element("CapitalTycoon_html")!.innerHTML = "Capital Tycoon";
     break;
   default:  //PORTUGUÊS
     document.cookie = "language=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -23,7 +23,7 @@ function setLanguage(language: "en" | "pt") {
     element("Animation 1_html")!.innerHTML = "Animação 1";
     element("Animation 2_html")!.innerHTML = "Animação 2";
     element("Ball Game_html")!.innerHTML = "Jogo da Bolinha";
-    element("Monopoly_html")!.innerHTML = "Monopólio";
+    element("CapitalTycoon_html")!.innerHTML = "Capital Tycoon";
     break;
   }
 }

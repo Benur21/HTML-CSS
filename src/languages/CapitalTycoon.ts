@@ -6,7 +6,7 @@ function setLanguage(language: "en" | "pt") {
   switch (language) {
   case "en":
     document.cookie = "language=" + language + "; expires=Thu, 01 Jan 2040 00:00:00 UTC; path=/;";
-    document.title = "Monopoly";
+    document.title = "Capital Tycoon";
     canvas.innerHTML = "Your browser doesn't support the HTML5 canvas tag.";
     element("backToIndex")!.innerHTML = "Back";
     element("reloadButton")!.innerHTML = "Reload";
@@ -14,7 +14,7 @@ function setLanguage(language: "en" | "pt") {
   default:
     document.cookie = "language=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     localStorage.removeItem("language");
-    document.title = "Monopólio";
+    document.title = "Capital Tycoon";
     canvas.innerHTML = "O teu browser não suporta a tag canvas do HTML5.";
     element("backToIndex")!.innerHTML = "Voltar";
     element("reloadButton")!.innerHTML = "Recarregar";

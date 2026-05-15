@@ -1,5 +1,5 @@
 import { element, resizeCanvas, getCookie, backToIndex } from "../JSTools";
-import { setLanguage } from "../languages/Monopoly";
+import { setLanguage } from "../languages/CapitalTycoon";
 import '../globals';
 
 // <select> ONLOAD=
