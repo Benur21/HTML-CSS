@@ -852,6 +852,7 @@ class JSImage extends Control {
     this.src = src;
     this.xAlign = xAlign;
     this.yAlign = yAlign;
+    this.scale = 1; // default
 
     let type: 'png' | 'svg' | null;
     switch (src.substring(src.length - 4)) {
@@ -890,8 +891,6 @@ class JSImage extends Control {
         this.img.element.src = src;
         break;
     }
-
-    this.scale = 1;
   }
 
   draw() {
@@ -950,7 +949,7 @@ class JSImage extends Control {
  */
 type JSImageImg =
   | { src: string; type: 'png'; element?: HTMLImageElement }
-  | { src: string; type: 'svg'; element?: SVGElement }
+  | { src: string; type: 'svg'; element?: SVGSVGElement }
   | { src: string; type: null; element?: undefined };
 
 export {
