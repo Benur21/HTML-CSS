@@ -75,7 +75,7 @@ game.container.pawn4 = new JSImage(
   game.container.pawn3,
   game.container.pawn4,
 ].forEach(pawn => {
-  pawn.scale = 0.05;
+  pawn.scale = 0.25;
   pawn.editSVG((pawn: SVGElement) => {
     pawn.setAttribute('fill', 'red');
   }, '.pawn');
