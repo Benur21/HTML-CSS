@@ -326,7 +326,7 @@ class Label extends Control {
     this.color = "white";
     this.outlineColor = transparent;
     this.textHeight = 30;
-    this.fontFamily = "Tahoma";
+    this.fontFamily = "Arial";
     this.xAlign = xAlign; //Horizontal Aligning
     this.yAlign = "middle"; //Vertical Aligning
   }
@@ -342,7 +342,7 @@ class Label extends Control {
       ctx.textBaseline = this.yAlign;
       ctx.strokeStyle = this.outlineColor;
       ctx.lineWidth = this.outlineWidth;
-      ctx.font = "bold " + this.textHeight + "px " + this.fontFamily;
+      ctx.font = "bold " + this.textHeight + "px " + this.fontFamily + ", Arial, sans-serif";
     }
   }
   /**
